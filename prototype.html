@@ -825,15 +825,15 @@ tr:hover td{background:var(--surface2);}
     </div>
     <div class="reasoning-section">
       <div class="reasoning-label" data-i18n="label_why_job">Why This Job</div>
-      <div class="reasoning-content">Strong match based on your 2019–2022 Mekorot project history. The JD requires "cross-departmental infrastructure projects under regulatory constraints" — directly mirrors your HOT Mobile rollout. The water-tech gap can be bridged by emphasizing your utility-sector governance framework.</div>
+      <div class="reasoning-content" id="reasoning-why">Strong match based on your 2019–2022 Mekorot project history. The JD requires "cross-departmental infrastructure projects under regulatory constraints" — directly mirrors your HOT Mobile rollout. The water-tech gap can be bridged by emphasizing your utility-sector governance framework.</div>
     </div>
     <div class="reasoning-section">
       <div class="reasoning-label" data-i18n="label_tailoring">Tailoring Strategy</div>
-      <div class="reasoning-content"><strong>1. Lead with Mekorot</strong> — Open CV summary with "national water infrastructure modernization."<br><br><strong>2. Bridge the SAP gap</strong> — Mention Oracle Primavera as equivalent. Add "Rapid ERP adaptation" to skills.<br><br><strong>3. Cover letter</strong> — Frame HOT Mobile multi-site rollout as equivalent complexity.</div>
+      <div class="reasoning-content" id="reasoning-tailoring"><strong>1. Lead with Mekorot</strong> — Open CV summary with "national water infrastructure modernization."<br><br><strong>2. Bridge the SAP gap</strong> — Mention Oracle Primavera as equivalent. Add "Rapid ERP adaptation" to skills.<br><br><strong>3. Cover letter</strong> — Frame HOT Mobile multi-site rollout as equivalent complexity.</div>
     </div>
     <div class="reasoning-section">
       <div class="reasoning-label" data-i18n="label_execution">Execution Plan</div>
-      <div class="reasoning-content">Path: <strong>Web Form (Playwright)</strong> · mekorot.co.il/careers · 8 fields · ~45 seconds</div>
+      <div class="reasoning-content" id="reasoning-execution">Path: <strong>Web Form (Playwright)</strong> · mekorot.co.il/careers · 8 fields · ~45 seconds</div>
     </div>
     <div class="action-row">
       <button class="btn btn-ghost" onclick="closeReasoning()" data-i18n="btn_edit_strategy">Edit Strategy</button>
@@ -870,54 +870,51 @@ tr:hover td{background:var(--surface2);}
 
 <script>
 // ══════════════════════════════════════════════════════
-// i18n ENGINE
-// To add a new language: add a new key block to TRANSLATIONS
-// and add a toggle case in toggleLang().
+// i18n ENGINE — Hybrid approach
+//
+// EN: always inline (zero network cost, always available)
+// Other locales: loaded once from locales/<lang>.js,
+//   then cached in localStorage — subsequent loads are instant.
+//
+// To add a new language:
+//   1. Create locales/<lang>.js with window.LOCALE_<LANG> = { ui:{}, reasoning:{} }
+//   2. Add the lang tag to toggleLang() cycle below
 // ══════════════════════════════════════════════════════
+
+// ── EN translations (inline — never needs a network request) ──
 const TRANSLATIONS = {
   en: {
-    // Navigation
     nav_dashboard:'⚡ Dashboard', nav_profiles:'👤 Profiles', nav_admin:'🛡 Admin',
-    // User menu
     menu_theme:'Theme', theme_light:'☀️ Light', theme_steel:'Steel Blue', theme_sage:'Sage Green',
     theme_teal:'Deep Teal', theme_sand:'Warm Sand', theme_dark:'🌙 Dark',
     theme_navy:'Midnight Navy', theme_forest:'Forest Dark',
     menu_brightness:'🔆 Brightness', menu_settings:'Settings', menu_logout:'Log out',
-    // Sidebar
     sidebar_workspace:'Workspace', sidebar_job_leads:'Job Leads', sidebar_my_profiles:'My Profiles',
     sidebar_tools:'Tools', sidebar_scraper:'Scraper', sidebar_autopilot_log:'Autopilot Log',
     sidebar_my_cvs:'My CVs', sidebar_system:'System', sidebar_admin_center:'Admin Center',
     sidebar_settings:'Settings',
-    // Dashboard
     page_job_leads:'Job Leads', page_job_leads_sub:'47 active leads · Last scraped 12 min ago',
     btn_scrape:'🔄 Scrape', btn_add_lead:'+ Add Lead', placeholder_search:'🔍  Search...',
     filter_all:'All', filter_linkedin:'LinkedIn', filter_gov:'Gov', filter_ge80:'≥80%',
     stat_sent:'Sent', stat_review:'Review', stat_auto:'Auto', stat_total:'Total',
-    // Table headers
     th_job_title:'Job Title / Company', th_source:'Source', th_posted:'Posted',
     th_match:'Match', th_status:'Status', th_autonomy:'Autonomy', th_ai_strategy:'AI Strategy',
     th_magic_btn:'Magic Button', th_cv:'CV', th_user:'User', th_tier:'Tier',
     th_magic:'Magic', th_autopilot:'Autopilot', th_tokens:'Tokens', th_limit:'Limit',
-    // Status / mode badges
     status_in_review:'In Review', status_sent:'✓ Sent', status_pending:'Pending',
     status_new:'New', status_auto:'✓ Auto', status_error:'⚠ Error',
     mode_autopilot:'Autopilot', mode_copilot:'Co-Pilot', mode_manual:'Manual',
-    // CV column
     cv_ready:'📄 Ready', cv_generating:'Generating...', cv_sent:'📄 Sent', cv_upload_fail:'⚠ Upload fail',
-    // Buttons
     btn_strategy:'🧠 Strategy', btn_apply:'✨ Apply', btn_applied:'✓ Applied',
     btn_auto_applied:'🤖 Auto-Applied', btn_low_match:'Low Match', btn_retry:'↩ Retry',
     btn_apply_now:'✨ Apply Now', btn_settings:'⚙ Settings', btn_new_profile:'+ New Profile',
     btn_export:'📊 Export', btn_add_user:'+ Add User', btn_edit:'Edit',
     btn_edit_strategy:'Edit Strategy', btn_accept_apply:'✓ Accept & Apply',
-    // Profiles
     page_profiles:'Professional Profiles', page_profiles_sub:'AI Professional Agents · 2 of 5 active',
     label_autopilot_threshold:'Autopilot threshold:',
     stat_applied:'Applied', stat_leads:'Leads', stat_avg_score:'Avg Score',
     mode_autopilot_active:'🤖 Autopilot Active', mode_copilot_mode:'🤝 Co-Pilot Mode',
-    add_new_profile:'Add New Profile', slots_remaining:'3 of 5 slots remaining',
-    tier_premium:'Premium',
-    // Admin
+    add_new_profile:'Add New Profile', slots_remaining:'3 of 5 slots remaining', tier_premium:'Premium',
     page_admin:'Admin Center', page_admin_sub:'Platform management · Unit Economics',
     kpi_total_users:'Total Users', kpi_mrr:'MRR', kpi_api_cost:'API Cost', kpi_magic_clicks:'Magic Clicks',
     kpi_delta_users:'↑ +3 this week', kpi_delta_mrr:'↑ +$18 MoM',
@@ -927,14 +924,12 @@ const TRANSLATIONS = {
     alert_usage_title:'⚠ Usage Alert — Noa S.', alert_usage_body:'94% of monthly token limit reached.',
     funnel_triggered:'Triggered', funnel_cv_generated:'CV Generated', funnel_submitted:'Submitted',
     funnel_interview:'Interview', funnel_success_rate:'Success rate',
-    // Reasoning modal
     label_match_analysis:'Match Analysis', label_why_job:'Why This Job',
     label_tailoring:'Tailoring Strategy', label_execution:'Execution Plan',
     reasoning_title_mekorot:'🧠 AI Strategy — Senior PMO Manager',
     reasoning_title_hot:'🧠 AI Strategy — Digital Transformation PM',
     reasoning_title_hapoalim:'🧠 AI Strategy — Agile Program Manager',
     reasoning_title_default:'🧠 AI Strategy',
-    // Magic modal
     magic_modal_title:'✨ Magic Button — Executing',
     step1_name:'CV Tailoring', step1_detail:'Generating JD-optimized PDF via Claude Sonnet',
     step2_name:'Portal Login', step2_detail:'Playwright → mekorot.co.il/careers',
@@ -947,84 +942,29 @@ const TRANSLATIONS = {
     step4_running:'Submitting...', step4_done:'✓ Sent!',
     magic_success:'✅ Application submitted!',
     magic_success_sub:'Status → "Sent" · Audit trail saved',
-    // Proto label
     proto_label:'🎨 Prototype v3 · Avatar → Theme & Brightness · ☰ for mobile menu',
-  },
-  he: {
-    // Navigation
-    nav_dashboard:'⚡ לוח בקרה', nav_profiles:'👤 פרופילים', nav_admin:'🛡 ניהול',
-    // User menu
-    menu_theme:'ערכת נושא', theme_light:'☀️ בהיר', theme_steel:'כחול פלדה', theme_sage:'ירוק מרווה',
-    theme_teal:'טיל עמוק', theme_sand:'חול חם', theme_dark:'🌙 כהה',
-    theme_navy:'כחול חצות', theme_forest:'יער כהה',
-    menu_brightness:'🔆 בהירות', menu_settings:'הגדרות', menu_logout:'התנתק',
-    // Sidebar
-    sidebar_workspace:'סביבת עבודה', sidebar_job_leads:'משרות', sidebar_my_profiles:'הפרופילים שלי',
-    sidebar_tools:'כלים', sidebar_scraper:'סורק', sidebar_autopilot_log:'יומן אוטופיילוט',
-    sidebar_my_cvs:'קורות החיים שלי', sidebar_system:'מערכת', sidebar_admin_center:'מרכז ניהול',
-    sidebar_settings:'הגדרות',
-    // Dashboard
-    page_job_leads:'משרות', page_job_leads_sub:'47 משרות פעילות · סריקה אחרונה לפני 12 דקות',
-    btn_scrape:'🔄 סרוק', btn_add_lead:'+ הוסף משרה', placeholder_search:'🔍  חיפוש...',
-    filter_all:'הכל', filter_linkedin:'לינקדאין', filter_gov:'ממשלתי', filter_ge80:'≥80%',
-    stat_sent:'נשלח', stat_review:'בבדיקה', stat_auto:'אוטו', stat_total:'סך הכל',
-    // Table headers
-    th_job_title:'משרה / חברה', th_source:'מקור', th_posted:'פורסם',
-    th_match:'התאמה', th_status:'סטטוס', th_autonomy:'מצב', th_ai_strategy:'אסטרטגיית AI',
-    th_magic_btn:'כפתור קסם', th_cv:'קו"ח', th_user:'משתמש', th_tier:'רמה',
-    th_magic:'קסם', th_autopilot:'אוטופיילוט', th_tokens:'טוקנים', th_limit:'מגבלה',
-    // Status / mode badges
-    status_in_review:'בבדיקה', status_sent:'✓ נשלח', status_pending:'ממתין',
-    status_new:'חדש', status_auto:'✓ אוטו', status_error:'⚠ שגיאה',
-    mode_autopilot:'אוטופיילוט', mode_copilot:'קו-פיילוט', mode_manual:'ידני',
-    // CV column
-    cv_ready:'📄 מוכן', cv_generating:'מייצר...', cv_sent:'📄 נשלח', cv_upload_fail:'⚠ שגיאת העלאה',
-    // Buttons
-    btn_strategy:'🧠 אסטרטגיה', btn_apply:'✨ הגש', btn_applied:'✓ הוגש',
-    btn_auto_applied:'🤖 הוגש אוטומטית', btn_low_match:'התאמה נמוכה', btn_retry:'↩ נסה שוב',
-    btn_apply_now:'✨ הגש עכשיו', btn_settings:'⚙ הגדרות', btn_new_profile:'+ פרופיל חדש',
-    btn_export:'📊 ייצא', btn_add_user:'+ הוסף משתמש', btn_edit:'ערוך',
-    btn_edit_strategy:'ערוך אסטרטגיה', btn_accept_apply:'✓ אשר והגש',
-    // Profiles
-    page_profiles:'פרופילים מקצועיים', page_profiles_sub:'סוכני AI מקצועיים · 2 מתוך 5 פעילים',
-    label_autopilot_threshold:'סף אוטופיילוט:',
-    stat_applied:'הוגש', stat_leads:'משרות', stat_avg_score:'ציון ממוצע',
-    mode_autopilot_active:'🤖 אוטופיילוט פעיל', mode_copilot_mode:'🤝 מצב קו-פיילוט',
-    add_new_profile:'הוסף פרופיל חדש', slots_remaining:'3 מתוך 5 חריצים פנויים',
-    tier_premium:'פרמיום',
-    // Admin
-    page_admin:'מרכז ניהול', page_admin_sub:'ניהול פלטפורמה · כלכלת יחידה',
-    kpi_total_users:'סך משתמשים', kpi_mrr:'הכנסה חודשית', kpi_api_cost:'עלות API', kpi_magic_clicks:'לחיצות קסם',
-    kpi_delta_users:'↑ +3 השבוע', kpi_delta_mrr:'↑ +$18 לחודש',
-    kpi_delta_margin:'מרווח 78%', kpi_delta_magic:'↑ +41% לחודש',
-    section_user_mgmt:'ניהול משתמשים', section_api_cost:'פירוט עלות API',
-    section_magic_funnel:'משפך כפתור הקסם',
-    alert_usage_title:'⚠ התראת שימוש — Noa S.', alert_usage_body:'94% ממגבלת הטוקנים החודשית הושגה.',
-    funnel_triggered:'הופעל', funnel_cv_generated:'קו"ח נוצר', funnel_submitted:'הוגש',
-    funnel_interview:'ראיון', funnel_success_rate:'שיעור הצלחה',
-    // Reasoning modal
-    label_match_analysis:'ניתוח התאמה', label_why_job:'למה המשרה הזו',
-    label_tailoring:'אסטרטגיית התאמה', label_execution:'תוכנית ביצוע',
-    reasoning_title_mekorot:'🧠 אסטרטגיית AI — מנהל פרויקטים בכיר',
-    reasoning_title_hot:'🧠 אסטרטגיית AI — מנהל טרנספורמציה דיגיטלית',
-    reasoning_title_hapoalim:'🧠 אסטרטגיית AI — מנהל תוכנית אג\'ייל',
-    reasoning_title_default:'🧠 אסטרטגיית AI',
-    // Magic modal
-    magic_modal_title:'✨ כפתור קסם — מבצע',
-    step1_name:'התאמת קו"ח', step1_detail:'יוצר PDF מותאם למשרה באמצעות Claude Sonnet',
-    step2_name:'כניסה לפורטל', step2_detail:'Playwright → mekorot.co.il/careers',
-    step3_name:'מילוי טופס', step3_detail:'8 שדות זוהו · ממלא מהפרופיל',
-    step4_name:'שליחה ותיעוד', step4_detail:'מעלה קו"ח ומכתב מקדים, שביל ביקורת',
-    step_waiting:'ממתין',
-    step1_running:'מייצר...', step1_done:'✓ הושלם',
-    step2_running:'מתחבר...', step2_done:'✓ כניסה בוצעה',
-    step3_running:'ממלא...', step3_done:'✓ 8/8 שדות',
-    step4_running:'שולח...', step4_done:'✓ נשלח!',
-    magic_success:'✅ הבקשה הוגשה בהצלחה!',
-    magic_success_sub:'סטטוס → "נשלח" · שביל ביקורת נשמר',
-    // Proto label
-    proto_label:'🎨 אב-טיפוס v3 · אווטאר → ערכת נושא · ☰ לתפריט נייד',
-  },
+  }
+};
+
+// ── EN reasoning content (inline) ──
+const REASONING = {
+  en: {
+    mekorot: {
+      why: 'Strong match based on your 2019–2022 Mekorot project history. The JD requires "cross-departmental infrastructure projects under regulatory constraints" — directly mirrors your HOT Mobile rollout. The water-tech gap can be bridged by emphasizing your utility-sector governance framework.',
+      tailoring: '<strong>1. Lead with Mekorot</strong> — Open CV summary with "national water infrastructure modernization."<br><br><strong>2. Bridge the SAP gap</strong> — Mention Oracle Primavera as equivalent. Add "Rapid ERP adaptation" to skills.<br><br><strong>3. Cover letter</strong> — Frame HOT Mobile multi-site rollout as equivalent complexity.',
+      execution: 'Path: <strong>Web Form (Playwright)</strong> · mekorot.co.il/careers · 8 fields · ~45 seconds'
+    },
+    hot: {
+      why: 'Strong match driven by your digital project management experience. The JD emphasizes digital transformation and stakeholder management — areas where your profile excels given prior telecom background.',
+      tailoring: '<strong>1. Highlight digital experience</strong> — Detail prior transformation projects with quantitative metrics (time, cost, users).<br><br><strong>2. Stakeholder management</strong> — Provide specific examples of C-level engagement.<br><br><strong>3. Methodology</strong> — Cite Agile/Scrum experience in a telecom environment with tight deadlines.',
+      execution: 'Path: <strong>Email (SendGrid)</strong> · careers@hot.co.il · CV + cover letter'
+    },
+    hapoalim: {
+      why: 'Good match for the Agile fintech role. Your complex program management experience is highly relevant, though the specific banking background gap needs bridging with compliance and regulatory experience.',
+      tailoring: '<strong>1. Highlight Agile</strong> — Detail certifications and frameworks (SAFe, Scrum, Kanban) with measurable outcomes.<br><br><strong>2. Bridge the fintech gap</strong> — Present projects with similar compliance requirements (ISO, SOX, GDPR).<br><br><strong>3. Performance metrics</strong> — Include ROI and velocity metrics from past projects to quantify results.',
+      execution: 'Path: <strong>Career Portal (Playwright)</strong> · bankhapoalim.co.il/careers · 12 fields · ~60 seconds'
+    }
+  }
 };
 
 let currentLocale = localStorage.getItem('locale') || 'en';
@@ -1035,7 +975,43 @@ function t(key) {
       || key;
 }
 
-function setLocale(lang) {
+// ── Dynamic locale loader with localStorage cache ──
+// Uses script-tag injection (works on file://, no CORS issue).
+// Cache key: "i18n_cache_<lang>" + "i18n_reasoning_<lang>"
+function loadLocale(lang) {
+  return new Promise((resolve, reject) => {
+    // 1. Check localStorage cache first — instant, no file I/O
+    const cachedUI        = localStorage.getItem('i18n_cache_' + lang);
+    const cachedReasoning = localStorage.getItem('i18n_reasoning_' + lang);
+    if (cachedUI && cachedReasoning) {
+      TRANSLATIONS[lang] = JSON.parse(cachedUI);
+      REASONING[lang]    = JSON.parse(cachedReasoning);
+      return resolve('cache');
+    }
+    // 2. First time: inject script tag, then cache the result
+    const script = document.createElement('script');
+    script.src = 'locales/' + lang + '.js';
+    script.onload = () => {
+      const locale = window['LOCALE_' + lang.toUpperCase()];
+      if (!locale) return reject('LOCALE_' + lang.toUpperCase() + ' not found in file');
+      TRANSLATIONS[lang] = locale.ui;
+      REASONING[lang]    = locale.reasoning;
+      try {
+        localStorage.setItem('i18n_cache_' + lang,      JSON.stringify(locale.ui));
+        localStorage.setItem('i18n_reasoning_' + lang,  JSON.stringify(locale.reasoning));
+      } catch(e) { /* localStorage full — continue without caching */ }
+      resolve('loaded');
+    };
+    script.onerror = () => reject('Could not load locales/' + lang + '.js');
+    document.head.appendChild(script);
+  });
+}
+
+async function setLocale(lang) {
+  if (lang !== 'en' && !TRANSLATIONS[lang]) {
+    try { await loadLocale(lang); }
+    catch(e) { console.warn('i18n load failed, falling back to EN:', e); lang = 'en'; }
+  }
   currentLocale = lang;
   localStorage.setItem('locale', lang);
   document.documentElement.lang = lang;
@@ -1048,7 +1024,7 @@ function setLocale(lang) {
 }
 
 function toggleLang() {
-  // To add more languages, extend this cycle: en → he → fr → en etc.
+  // To add more languages extend this cycle: 'en' → 'he' → 'fr' → 'en'
   setLocale(currentLocale === 'en' ? 'he' : 'en');
 }
 
@@ -1112,12 +1088,21 @@ function setBrightness(val) {
 
 // ── Reasoning modal ──
 function openReasoning(job) {
-  const keys = {
+  const titleKeys = {
     mekorot: 'reasoning_title_mekorot',
     hot:     'reasoning_title_hot',
     hapoalim:'reasoning_title_hapoalim',
   };
-  document.getElementById('reasoning-title').textContent = t(keys[job] || 'reasoning_title_default');
+  document.getElementById('reasoning-title').textContent = t(titleKeys[job] || 'reasoning_title_default');
+
+  // Populate content in current language, fall back to EN
+  const content = (REASONING[currentLocale] && REASONING[currentLocale][job])
+               || (REASONING['en'] && REASONING['en'][job])
+               || {};
+  if (content.why)       document.getElementById('reasoning-why').innerHTML       = content.why;
+  if (content.tailoring) document.getElementById('reasoning-tailoring').innerHTML = content.tailoring;
+  if (content.execution) document.getElementById('reasoning-execution').innerHTML = content.execution;
+
   document.getElementById('overlay-reasoning').classList.add('open');
 }
 function closeReasoning() { document.getElementById('overlay-reasoning').classList.remove('open'); }
