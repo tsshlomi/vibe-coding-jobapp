@@ -4,14 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Project JOB App — Prototype</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
-/* ═══════════════════════════════════════════
-   THEME SYSTEM — CSS Custom Properties
-   Per spec: 4 stress-reduction themes
-═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   THEME SYSTEM — 4 Light + 2 Dark
+   Spec: stress-reduction UI, 300ms transitions, 8-12px radius
+═══════════════════════════════════════════════════════ */
 :root {
-  /* Theme A: Professional Trust (Steel Blue) — default */
   --bg:          #F8FAFC;
   --surface:     #FFFFFF;
   --surface2:    #EFF4FB;
@@ -20,680 +19,350 @@
   --primary:     #4682B4;
   --primary-dim: #E3EEF7;
   --primary-text:#FFFFFF;
-  --secondary:   #B0C4DE;
   --text:        #2D3748;
   --text2:       #5A7080;
   --text3:       #9AB0C0;
-
-  /* Status colors — calm palette */
-  --green:       #2F9E44;
-  --green-dim:   #EBFBEE;
-  --blue:        #4682B4;
-  --blue-dim:    #E3EEF7;
-  --orange:      #ED8936;   /* spec: use instead of red for failures */
-  --orange-dim:  #FFF3E5;
-  --yellow:      #C49A00;
-  --yellow-dim:  #FFFBE6;
-  --purple:      #6B46C1;
-  --purple-dim:  #F0EBFF;
-  --muted:       #ED8936;   /* negative feedback — per spec */
-  --muted-dim:   #FFF3E5;
-
+  --green:       #2F9E44;  --green-dim:  #EBFBEE;
+  --blue:        #4682B4;  --blue-dim:   #E3EEF7;
+  --orange:      #ED8936;  --orange-dim: #FFF3E5;
+  --yellow:      #C49A00;  --yellow-dim: #FFFBE6;
+  --purple:      #6B46C1;  --purple-dim: #F0EBFF;
   --shadow-sm: 0 1px 3px rgba(45,55,72,0.08), 0 1px 2px rgba(45,55,72,0.04);
   --shadow-md: 0 4px 16px rgba(45,55,72,0.10);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
   --transition: all 0.3s ease-in-out;
 }
-
-/* Theme B: Growth & Harmony (Sage Green) */
 [data-theme="sage"] {
-  --bg:          #FAF9F6;
-  --surface:     #FFFFFF;
-  --surface2:    #F0F4EA;
-  --surface3:    #E0E8D4;
-  --border:      #C8D8B8;
-  --primary:     #87A96B;
-  --primary-dim: #EBF2E2;
-  --primary-text:#FFFFFF;
-  --secondary:   #E2E8CE;
-  --text:        #3A4D39;
-  --text2:       #5E7A5C;
-  --text3:       #9AB898;
-  --green:       #87A96B;
-  --green-dim:   #EBF2E2;
-  --blue:        #5B8AC4;
-  --blue-dim:    #E3EEF7;
-  --shadow-sm: 0 1px 3px rgba(58,77,57,0.08), 0 1px 2px rgba(58,77,57,0.04);
-  --shadow-md: 0 4px 16px rgba(58,77,57,0.10);
+  --bg:#FAF9F6; --surface:#FFFFFF; --surface2:#F0F4EA; --surface3:#E0E8D4; --border:#C8D8B8;
+  --primary:#87A96B; --primary-dim:#EBF2E2; --primary-text:#FFFFFF;
+  --text:#3A4D39; --text2:#5E7A5C; --text3:#9AB898;
+  --green:#87A96B; --green-dim:#EBF2E2; --blue:#5B8AC4; --blue-dim:#E3EEF7;
+  --shadow-sm:0 1px 3px rgba(58,77,57,0.08); --shadow-md:0 4px 16px rgba(58,77,57,0.10);
 }
-
-/* Theme C: Balanced Modernity (Deep Teal) */
 [data-theme="teal"] {
-  --bg:          #F4F7F6;
-  --surface:     #FFFFFF;
-  --surface2:    #E6EEEC;
-  --surface3:    #D0E0DC;
-  --border:      #B8D0CC;
-  --primary:     #008080;
-  --primary-dim: #DFF0F0;
-  --primary-text:#FFFFFF;
-  --secondary:   #80CBC4;
-  --text:        #1A202C;
-  --text2:       #4A6868;
-  --text3:       #8AABAB;
-  --green:       #008080;
-  --green-dim:   #DFF0F0;
-  --blue:        #008080;
-  --blue-dim:    #DFF0F0;
-  --shadow-sm: 0 1px 3px rgba(26,32,44,0.08), 0 1px 2px rgba(26,32,44,0.04);
-  --shadow-md: 0 4px 16px rgba(26,32,44,0.10);
+  --bg:#F4F7F6; --surface:#FFFFFF; --surface2:#E6EEEC; --surface3:#D0E0DC; --border:#B8D0CC;
+  --primary:#008080; --primary-dim:#DFF0F0; --primary-text:#FFFFFF;
+  --text:#1A202C; --text2:#4A6868; --text3:#8AABAB;
+  --green:#008080; --green-dim:#DFF0F0; --blue:#008080; --blue-dim:#DFF0F0;
+  --shadow-sm:0 1px 3px rgba(26,32,44,0.08); --shadow-md:0 4px 16px rgba(26,32,44,0.10);
 }
-
-/* Theme D: Earthy Stability (Warm Sand) */
 [data-theme="sand"] {
-  --bg:          #FFFBF5;
-  --surface:     #FFFFFF;
-  --surface2:    #F5EDE0;
-  --surface3:    #EAD8C0;
-  --border:      #D8C8A8;
-  --primary:     #C2B280;
-  --primary-dim: #F5EDE0;
-  --primary-text:#4A3728;
-  --secondary:   #E5D3B3;
-  --text:        #4A3728;
-  --text2:       #7A6050;
-  --text3:       #B0A088;
-  --green:       #7A8C50;
-  --green-dim:   #EDF0E0;
-  --blue:        #7898B4;
-  --blue-dim:    #E8EFF7;
-  --shadow-sm: 0 1px 3px rgba(74,55,40,0.08), 0 1px 2px rgba(74,55,40,0.04);
-  --shadow-md: 0 4px 16px rgba(74,55,40,0.10);
+  --bg:#FFFBF5; --surface:#FFFFFF; --surface2:#F5EDE0; --surface3:#EAD8C0; --border:#D8C8A8;
+  --primary:#C2B280; --primary-dim:#F5EDE0; --primary-text:#4A3728;
+  --text:#4A3728; --text2:#7A6050; --text3:#B0A088;
+  --green:#7A8C50; --green-dim:#EDF0E0; --blue:#7898B4; --blue-dim:#E8EFF7;
+  --shadow-sm:0 1px 3px rgba(74,55,40,0.08); --shadow-md:0 4px 16px rgba(74,55,40,0.10);
+}
+[data-theme="navy"] {
+  --bg:#1A202C; --surface:#2D3748; --surface2:#374151; --surface3:#4A5568; --border:#4A5568;
+  --primary:#63B3ED; --primary-dim:#1E3A52; --primary-text:#1A202C;
+  --text:#E2E8F0; --text2:#A0AEC0; --text3:#718096;
+  --green:#68D391; --green-dim:#1A3028; --blue:#63B3ED; --blue-dim:#1E3A52;
+  --orange:#F6AD55; --orange-dim:#3A2810; --yellow:#ECC94B; --yellow-dim:#302A08;
+  --purple:#B794F4; --purple-dim:#2D1E4A;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.3); --shadow-md:0 2px 8px rgba(0,0,0,0.4);
+}
+[data-theme="forest"] {
+  --bg:#1B241B; --surface:#283628; --surface2:#344834; --surface3:#415641; --border:#3D5240;
+  --primary:#87A96B; --primary-dim:#233023; --primary-text:#1B241B;
+  --text:#ECF3E9; --text2:#A8C4A0; --text3:#6B8A68;
+  --green:#87A96B; --green-dim:#233023; --blue:#7BAFD4; --blue-dim:#1E3040;
+  --orange:#D4956A; --orange-dim:#3A2518; --yellow:#C8B060; --yellow-dim:#302A10;
+  --purple:#A889D4; --purple-dim:#281E40;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.4); --shadow-md:0 2px 8px rgba(0,0,0,0.5);
 }
 
-/* ═══════════════════════════════════════════
-   BASE
-═══════════════════════════════════════════ */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: var(--transition);
-  font-size: 14px;
-  line-height: 1.5;
-}
+/* ═══════ BASE ═══════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column;transition:var(--transition);font-size:14px;line-height:1.5;}
 
-/* ═══════════════════════════════════════════
-   TOP BAR
-═══════════════════════════════════════════ */
-.topbar {
-  display: flex;
-  align-items: center;
-  height: 52px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-  gap: 12px;
-  flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
-}
-.topbar-logo {
-  font-weight: 800;
-  font-size: 16px;
-  color: var(--primary);
-  letter-spacing: -0.5px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.topbar-logo-icon {
-  width: 28px; height: 28px;
-  border-radius: var(--radius-sm);
-  background: var(--primary);
-  color: var(--primary-text);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 800;
-  transition: var(--transition);
-}
-.topbar-nav { display: flex; gap: 2px; margin-left: 8px; }
-.topbar-nav button {
-  background: none; border: none;
-  color: var(--text2);
-  font-size: 13px; font-weight: 500;
-  padding: 7px 14px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: inherit;
-}
-.topbar-nav button:hover { background: var(--surface2); color: var(--text); }
-.topbar-nav button.active {
-  background: var(--primary-dim);
-  color: var(--primary);
-  font-weight: 600;
-}
-.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+/* ═══════ TOP BAR ═══════ */
+.topbar{display:flex;align-items:center;height:52px;background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;gap:10px;flex-shrink:0;box-shadow:var(--shadow-sm);transition:var(--transition);position:relative;z-index:40;}
+.hamburger{display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2);padding:6px;border-radius:var(--radius-sm);transition:var(--transition);}
+.hamburger:hover{background:var(--surface2);color:var(--text);}
+.topbar-logo{font-weight:800;font-size:16px;color:var(--primary);letter-spacing:-0.5px;display:flex;align-items:center;gap:6px;}
+.topbar-logo-icon{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--primary);color:var(--primary-text);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;transition:var(--transition);}
+.topbar-nav{display:flex;gap:2px;margin-left:8px;}
+.topbar-nav button{background:none;border:none;color:var(--text2);font-size:13px;font-weight:500;padding:7px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);font-family:inherit;white-space:nowrap;}
+.topbar-nav button:hover{background:var(--surface2);color:var(--text);}
+.topbar-nav button.active{background:var(--primary-dim);color:var(--primary);font-weight:600;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
 
-/* Theme switcher */
-.theme-switcher { display: flex; gap: 6px; align-items: center; }
-.theme-dot {
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: var(--transition);
-}
-.theme-dot:hover { transform: scale(1.2); }
-.theme-dot.active { border-color: var(--text); }
-.td-steel { background: #4682B4; }
-.td-sage   { background: #87A96B; }
-.td-teal   { background: #008080; }
-.td-sand   { background: #C2B280; }
+/* ═══════ LANGUAGE BUTTON ═══════ */
+.lang-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);font-size:12px;font-weight:700;padding:5px 10px;cursor:pointer;transition:var(--transition);font-family:inherit;min-height:30px;letter-spacing:0.5px;}
+.lang-btn:hover{background:var(--primary-dim);color:var(--primary);border-color:var(--primary);}
 
-.profile-chip {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 5px 12px 5px 6px;
-  cursor: pointer;
-  font-size: 13px; font-weight: 500;
-  transition: var(--transition);
-  color: var(--text);
-}
-.profile-chip:hover { border-color: var(--primary); }
-.profile-avatar {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--primary);
-  color: var(--primary-text);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 700;
-  transition: var(--transition);
-}
-.mode-badge {
-  padding: 4px 10px; border-radius: 20px;
-  font-size: 11px; font-weight: 600;
-  transition: var(--transition);
-}
-.mode-autopilot { background: var(--purple-dim); color: var(--purple); }
-.mode-copilot   { background: var(--blue-dim); color: var(--blue); }
+/* ═══════ USER MENU ═══════ */
+.user-menu{position:relative;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--primary);color:var(--primary-text);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition);border:2px solid transparent;user-select:none;}
+.user-avatar:hover{border-color:var(--primary);filter:brightness(1.1);}
+.user-dropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);min-width:230px;box-shadow:var(--shadow-md);z-index:200;overflow:hidden;transition:var(--transition);}
+.user-dropdown.open{display:block;}
+.ud-identity{display:flex;align-items:center;gap:10px;padding:14px 16px;}
+.ud-id-avatar{width:36px;height:36px;border-radius:50%;background:var(--primary);color:var(--primary-text);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.ud-name{font-size:14px;font-weight:600;color:var(--text);}
+.ud-email{font-size:11px;color:var(--text2);margin-top:1px;}
+.ud-divider{height:1px;background:var(--border);margin:2px 0;}
+.ud-item{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:var(--transition);gap:8px;}
+.ud-item:hover{background:var(--surface2);color:var(--text);}
+.ud-item-icon{margin-right:4px;}
+.ud-arrow{font-size:16px;color:var(--text3);transition:var(--transition);}
+.ud-item.open .ud-arrow{transform:rotate(90deg);}
+.ud-logout:hover{color:var(--orange);}
 
-/* ═══════════════════════════════════════════
-   LAYOUT
-═══════════════════════════════════════════ */
-.layout { display: flex; flex: 1; overflow: hidden; }
+/* Theme panel */
+.theme-panel{display:none;background:var(--surface2);padding:6px 0;}
+.theme-panel.open{display:block;}
+.theme-group-label{font-size:10px;font-weight:700;letter-spacing:0.7px;text-transform:uppercase;color:var(--text3);padding:6px 16px 3px;}
+.theme-option{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 8px 24px;font-size:13px;color:var(--text2);cursor:pointer;transition:var(--transition);}
+.theme-option:hover{background:var(--surface3);color:var(--text);}
+.theme-option.active{color:var(--primary);font-weight:600;}
+.theme-check{color:var(--primary);font-size:13px;}
 
-/* ═══════════════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════════════ */
-.sidebar {
-  width: 210px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  padding: 16px 10px;
-  gap: 2px;
-  flex-shrink: 0;
-  transition: var(--transition);
-}
-.sidebar-section {
-  font-size: 10px; color: var(--text3);
-  font-weight: 700; letter-spacing: 0.8px;
-  text-transform: uppercase;
-  padding: 10px 10px 4px;
-}
-.sidebar-item {
-  display: flex; align-items: center; gap: 9px;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 13px; font-weight: 500;
-  color: var(--text2);
-  transition: var(--transition);
-}
-.sidebar-item:hover { background: var(--surface2); color: var(--text); }
-.sidebar-item.active { background: var(--primary-dim); color: var(--primary); font-weight: 600; }
-.sidebar-item .icon { font-size: 15px; width: 18px; text-align: center; }
-.sidebar-badge {
-  margin-left: auto;
-  background: var(--primary);
-  color: var(--primary-text);
-  border-radius: 10px;
-  font-size: 10px; font-weight: 700;
-  padding: 1px 7px;
-  transition: var(--transition);
-}
-.sidebar-badge.green { background: var(--green); color: #fff; }
+/* Brightness slider */
+.ud-brightness{padding:10px 16px 14px;}
+.ud-brightness-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:500;}
+#brightness-slider{width:100%;accent-color:var(--primary);cursor:pointer;height:4px;}
 
-/* ═══════════════════════════════════════════
-   MAIN / SCREENS
-═══════════════════════════════════════════ */
-.main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
-.screen { display: none; flex: 1; overflow: hidden; flex-direction: column; }
-.screen.active { display: flex; }
+/* ═══════ LAYOUT ═══════ */
+.layout{display:flex;flex:1;overflow:hidden;position:relative;}
+
+/* ═══════ SIDEBAR OVERLAY (mobile) ═══════ */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:30;backdrop-filter:blur(2px);}
+.sidebar-overlay.open{display:block;}
+
+/* ═══════ SIDEBAR ═══════ */
+.sidebar{width:210px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:16px 10px;gap:2px;flex-shrink:0;transition:var(--transition);z-index:35;}
+.sidebar-section{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:10px 10px 4px;}
+.sidebar-item{display:flex;align-items:center;gap:9px;padding:10px 10px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);transition:var(--transition);min-height:40px;}
+.sidebar-item:hover{background:var(--surface2);color:var(--text);}
+.sidebar-item.active{background:var(--primary-dim);color:var(--primary);font-weight:600;}
+.sidebar-item .icon{font-size:15px;width:18px;text-align:center;}
+.sidebar-badge{margin-left:auto;background:var(--primary);color:var(--primary-text);border-radius:10px;font-size:10px;font-weight:700;padding:2px 7px;transition:var(--transition);}
+.sidebar-badge.green{background:var(--green);color:#fff;}
+
+/* ═══════ MAIN ═══════ */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.screen{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.screen.active{display:flex;}
 
 /* PAGE HEADER */
-.page-header {
-  display: flex; align-items: center;
-  padding: 16px 24px;
-  border-bottom: 1px solid var(--border);
-  gap: 12px; flex-shrink: 0;
-  background: var(--surface);
-  transition: var(--transition);
-}
-.page-title { font-size: 17px; font-weight: 700; color: var(--text); }
-.page-sub { color: var(--text2); font-size: 12px; margin-top: 2px; font-weight: 400; }
-.page-actions { margin-left: auto; display: flex; gap: 8px; }
+.page-header{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);gap:12px;flex-shrink:0;background:var(--surface);transition:var(--transition);}
+.page-title{font-size:17px;font-weight:700;color:var(--text);}
+.page-sub{color:var(--text2);font-size:12px;margin-top:2px;}
+.page-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;}
 
 /* BUTTONS */
-.btn {
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  border: none;
-  font-size: 13px; font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: inherit;
-  line-height: 1;
-}
-.btn-primary { background: var(--primary); color: var(--primary-text); box-shadow: var(--shadow-sm); }
-.btn-primary:hover { filter: brightness(1.08); box-shadow: var(--shadow-md); }
-.btn-ghost {
-  background: var(--surface);
-  color: var(--text2);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--primary); }
-.btn-green { background: var(--green); color: #fff; box-shadow: var(--shadow-sm); }
-.btn-green:hover { filter: brightness(1.08); }
+.btn{padding:8px 16px;border-radius:var(--radius-sm);border:none;font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);font-family:inherit;line-height:1;min-height:36px;}
+.btn-primary{background:var(--primary);color:var(--primary-text);box-shadow:var(--shadow-sm);}
+.btn-primary:hover{filter:brightness(1.08);box-shadow:var(--shadow-md);}
+.btn-ghost{background:var(--surface);color:var(--text2);border:1px solid var(--border);}
+.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:var(--primary);}
+.btn-green{background:var(--green);color:#fff;box-shadow:var(--shadow-sm);}
+.btn-green:hover{filter:brightness(1.08);}
 
 /* TOOLBAR */
-.toolbar {
-  display: flex; align-items: center;
-  padding: 12px 24px; gap: 8px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  background: var(--surface);
-  transition: var(--transition);
-}
-.search-box {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 7px 12px;
-  font-size: 13px; color: var(--text3);
-  flex: 1; max-width: 280px;
-  transition: var(--transition);
-  cursor: text;
-}
-.filter-chip {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px; font-weight: 500;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text2);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.filter-chip:hover { border-color: var(--primary); color: var(--primary); }
-.filter-chip.on { background: var(--primary-dim); border-color: var(--primary); color: var(--primary); font-weight: 600; }
-.stats-row { margin-left: auto; display: flex; gap: 20px; }
-.stat { text-align: center; }
-.stat-val { font-size: 17px; font-weight: 700; }
-.stat-label { font-size: 10px; color: var(--text3); margin-top: 1px; font-weight: 500; }
+.toolbar{display:flex;align-items:center;padding:10px 20px;gap:8px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface);transition:var(--transition);flex-wrap:wrap;}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;font-size:13px;color:var(--text3);flex:1;min-width:160px;max-width:280px;transition:var(--transition);}
+.filter-chip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:var(--transition);white-space:nowrap;}
+.filter-chip:hover{border-color:var(--primary);color:var(--primary);}
+.filter-chip.on{background:var(--primary-dim);border-color:var(--primary);color:var(--primary);font-weight:600;}
+.stats-row{display:flex;gap:16px;margin-left:auto;}
+.stat{text-align:center;}
+.stat-val{font-size:17px;font-weight:700;}
+.stat-label{font-size:10px;color:var(--text3);margin-top:1px;}
 
-/* ═══════════════════════════════════════════
-   TABLE
-═══════════════════════════════════════════ */
-.table-wrap { flex: 1; overflow: auto; background: var(--bg); transition: var(--transition); }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th {
-  position: sticky; top: 0;
-  background: var(--surface2);
-  color: var(--text3);
-  font-weight: 600; font-size: 11px;
-  text-transform: uppercase; letter-spacing: 0.5px;
-  padding: 10px 16px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap; z-index: 1;
-  transition: var(--transition);
-}
-td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-  white-space: nowrap;
-  background: var(--surface);
-  transition: background 0.3s ease-in-out;
-}
-tr:hover td { background: var(--surface2); }
-.col-title { min-width: 200px; max-width: 240px; white-space: normal; }
-.job-title { font-weight: 600; color: var(--text); font-size: 13px; line-height: 1.4; }
-.company { color: var(--text2); font-size: 12px; margin-top: 2px; }
+/* ═══════ TABLE ═══════ */
+.table-wrap{flex:1;overflow:auto;background:var(--bg);transition:var(--transition);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{position:sticky;top:0;background:var(--surface2);color:var(--text3);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;z-index:1;transition:var(--transition);}
+td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;background:var(--surface);transition:background 0.3s ease-in-out;}
+tr:hover td{background:var(--surface2);}
+.col-title{min-width:190px;max-width:230px;white-space:normal;}
+.job-title{font-weight:600;color:var(--text);font-size:13px;line-height:1.4;}
+.company{color:var(--text2);font-size:12px;margin-top:2px;}
 
-/* Score bar */
-.score-wrap { display: flex; align-items: center; gap: 8px; }
-.score-bar-bg { width: 52px; height: 5px; background: var(--surface3); border-radius: 3px; }
-.score-bar-fill { height: 5px; border-radius: 3px; transition: var(--transition); }
-.score-num { font-weight: 700; font-size: 13px; }
-.score-high { color: var(--green); }
-.score-mid  { color: var(--yellow); }
-.score-low  { color: var(--orange); }  /* muted orange, not alert red — per spec */
+.score-wrap{display:flex;align-items:center;gap:8px;}
+.score-bar-bg{width:48px;height:5px;background:var(--surface3);border-radius:3px;}
+.score-bar-fill{height:5px;border-radius:3px;transition:var(--transition);}
+.score-num{font-weight:700;font-size:13px;}
+.score-high{color:var(--green);}
+.score-mid{color:var(--yellow);}
+.score-low{color:var(--orange);}
 
-/* Source badges */
-.source-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 9px; border-radius: var(--radius-sm);
-  font-size: 11px; font-weight: 600;
-  transition: var(--transition);
-}
-.src-linkedin { background: var(--blue-dim); color: var(--blue); }
-.src-telegram { background: var(--primary-dim); color: var(--primary); }
-.src-gov      { background: var(--yellow-dim); color: var(--yellow); }
-.src-indeed   { background: var(--purple-dim); color: var(--purple); }
-.src-facebook { background: var(--surface2); color: var(--text2); }
+.source-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;transition:var(--transition);}
+.src-linkedin{background:var(--blue-dim);color:var(--blue);}
+.src-telegram{background:var(--primary-dim);color:var(--primary);}
+.src-gov{background:var(--yellow-dim);color:var(--yellow);}
+.src-indeed{background:var(--purple-dim);color:var(--purple);}
+.src-facebook{background:var(--surface2);color:var(--text2);}
 
-/* Status badges */
-.status-badge {
-  padding: 4px 9px; border-radius: var(--radius-sm);
-  font-size: 11px; font-weight: 600;
-  transition: var(--transition);
-}
-.s-new      { background: var(--surface2); color: var(--text2); }
-.s-pending  { background: var(--blue-dim); color: var(--blue); }
-.s-sent     { background: var(--green-dim); color: var(--green); }
-.s-failed   { background: var(--orange-dim); color: var(--orange); }  /* muted, not alert red */
-.s-reviewing{ background: var(--yellow-dim); color: var(--yellow); }
+.status-badge{padding:4px 9px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;transition:var(--transition);}
+.s-new{background:var(--surface2);color:var(--text2);}
+.s-pending{background:var(--blue-dim);color:var(--blue);}
+.s-sent{background:var(--green-dim);color:var(--green);}
+.s-failed{background:var(--orange-dim);color:var(--orange);}
+.s-reviewing{background:var(--yellow-dim);color:var(--yellow);}
 
-/* Magic button */
-.magic-btn {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 7px 12px;
-  border-radius: var(--radius-sm);
-  border: none;
-  font-size: 12px; font-weight: 700;
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: inherit;
-}
-.magic-btn-ready {
-  background: var(--primary);
-  color: var(--primary-text);
-  box-shadow: var(--shadow-sm);
-}
-.magic-btn-ready:hover { filter: brightness(1.08); box-shadow: var(--shadow-md); transform: translateY(-1px); }
-.magic-btn-auto {
-  background: var(--purple-dim); color: var(--purple);
-  border: 1px solid var(--purple);
-}
-.magic-btn-sent { background: var(--green-dim); color: var(--green); cursor: default; }
-.magic-btn-low  { background: var(--surface2); color: var(--text3); cursor: not-allowed; border: 1px solid var(--border); }
+.mode-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;transition:var(--transition);}
+.mode-autopilot{background:var(--purple-dim);color:var(--purple);}
+.mode-copilot{background:var(--blue-dim);color:var(--blue);}
 
-.reasoning-btn {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text2);
-  font-size: 11px; font-weight: 500;
-  padding: 5px 9px;
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: inherit;
-}
-.reasoning-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-dim); }
+.magic-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:var(--radius-sm);border:none;font-size:12px;font-weight:700;cursor:pointer;transition:var(--transition);font-family:inherit;min-height:34px;}
+.magic-btn-ready{background:var(--primary);color:var(--primary-text);box-shadow:var(--shadow-sm);}
+.magic-btn-ready:hover{filter:brightness(1.08);box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.magic-btn-sent{background:var(--green-dim);color:var(--green);cursor:default;}
+.magic-btn-low{background:var(--surface2);color:var(--text3);cursor:not-allowed;border:1px solid var(--border);}
+.reasoning-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);font-size:11px;font-weight:500;padding:5px 9px;cursor:pointer;transition:var(--transition);font-family:inherit;min-height:30px;}
+.reasoning-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim);}
 
-/* ═══════════════════════════════════════════
-   MODAL OVERLAY
-═══════════════════════════════════════════ */
-.overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(45,55,72,0.35);
-  z-index: 100;
-  align-items: center; justify-content: center;
-  backdrop-filter: blur(4px);
-  transition: var(--transition);
-}
-.overlay.open { display: flex; }
-.modal {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  width: 560px;
-  max-height: 82vh;
-  overflow-y: auto;
-  padding: 28px;
-  box-shadow: var(--shadow-md);
-  transition: var(--transition);
-}
-.modal-wide { width: 680px; }
-.modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
-.modal-title { font-size: 17px; font-weight: 700; color: var(--text); }
-.modal-sub { font-size: 13px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
-.modal-close {
-  background: var(--surface2); border: none;
-  color: var(--text2); font-size: 14px;
-  cursor: pointer; padding: 5px 8px;
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
-  font-family: inherit;
-}
-.modal-close:hover { background: var(--surface3); color: var(--text); }
+/* ═══════ MOBILE JOB CARDS ═══════ */
+.job-cards{display:none;flex:1;overflow-y:auto;padding:12px;gap:10px;flex-direction:column;background:var(--bg);}
+.job-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;box-shadow:var(--shadow-sm);transition:var(--transition);}
+.job-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px;}
+.job-card-title{font-weight:700;font-size:14px;color:var(--text);line-height:1.4;}
+.job-card-company{font-size:12px;color:var(--text2);margin-top:2px;}
+.job-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center;}
+.job-card-actions{display:flex;gap:8px;margin-top:10px;}
+.job-card-actions .magic-btn{flex:1;justify-content:center;}
+.job-card-actions .reasoning-btn{flex:1;text-align:center;}
 
-/* Reasoning modal */
-.reasoning-section { margin-bottom: 18px; }
-.reasoning-label {
-  font-size: 10px; color: var(--text3);
-  text-transform: uppercase; letter-spacing: 0.7px;
-  font-weight: 700; margin-bottom: 8px;
-}
-.reasoning-content {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  font-size: 13px; color: var(--text);
-  line-height: 1.6;
-  transition: var(--transition);
-}
-.match-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-.match-pill { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.mp-match { background: var(--green-dim); color: var(--green); }
-.mp-gap   { background: var(--orange-dim); color: var(--orange); }  /* soft orange, not red */
-.action-row { display: flex; gap: 8px; margin-top: 22px; }
+/* ═══════ MODAL ═══════ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(45,55,72,0.35);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:16px;}
+.overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:560px;max-height:88vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow-md);transition:var(--transition);}
+.modal-wide{max-width:660px;}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;}
+.modal-title{font-size:17px;font-weight:700;color:var(--text);}
+.modal-sub{font-size:13px;color:var(--text2);margin-top:3px;line-height:1.5;}
+.modal-close{background:var(--surface2);border:none;color:var(--text2);font-size:14px;cursor:pointer;padding:5px 8px;border-radius:var(--radius-sm);transition:var(--transition);font-family:inherit;flex-shrink:0;}
+.modal-close:hover{background:var(--surface3);color:var(--text);}
+.reasoning-section{margin-bottom:16px;}
+.reasoning-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;font-weight:700;margin-bottom:8px;}
+.reasoning-content{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;font-size:13px;color:var(--text);line-height:1.6;transition:var(--transition);}
+.match-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.match-pill{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;}
+.mp-match{background:var(--green-dim);color:var(--green);}
+.mp-gap{background:var(--orange-dim);color:var(--orange);}
+.action-row{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;}
 
-/* Magic button modal */
-.magic-steps { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
-.magic-step {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 14px 16px;
-  background: var(--surface2);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  transition: var(--transition);
-}
-.step-icon {
-  width: 36px; height: 36px;
-  border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 17px; flex-shrink: 0;
-  transition: var(--transition);
-}
-.step-done   { background: var(--green-dim); }
-.step-active { background: var(--primary-dim); animation: pulse 1.5s infinite; }
-.step-wait   { background: var(--surface3); }
-.step-info   { flex: 1; }
-.step-name   { font-size: 14px; font-weight: 600; color: var(--text); }
-.step-detail { font-size: 12px; color: var(--text2); margin-top: 2px; line-height: 1.5; }
-.step-status { font-size: 12px; font-weight: 600; margin-left: auto; align-self: center; }
-.ss-done    { color: var(--green); }
-.ss-running { color: var(--primary); }
-.ss-wait    { color: var(--text3); }
+.magic-steps{display:flex;flex-direction:column;gap:10px;margin:16px 0;}
+.magic-step{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--surface2);border-radius:var(--radius-md);border:1px solid var(--border);transition:var(--transition);}
+.step-icon{width:34px;height:34px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:var(--transition);}
+.step-done{background:var(--green-dim);}
+.step-active{background:var(--primary-dim);animation:pulse 1.5s infinite;}
+.step-wait{background:var(--surface3);}
+.step-info{flex:1;}
+.step-name{font-size:13px;font-weight:600;color:var(--text);}
+.step-detail{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.5;}
+.step-status{font-size:12px;font-weight:600;margin-left:auto;align-self:center;white-space:nowrap;}
+.ss-done{color:var(--green);} .ss-running{color:var(--primary);} .ss-wait{color:var(--text3);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.progress-bar{height:5px;background:var(--surface3);border-radius:3px;margin-bottom:16px;transition:var(--transition);}
+.progress-fill{height:5px;background:var(--primary);border-radius:3px;transition:width 0.4s ease-in-out;}
+#magic-result{display:none;text-align:center;padding:14px;background:var(--green-dim);border-radius:var(--radius-md);color:var(--green);font-weight:700;font-size:14px;line-height:1.6;}
 
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+/* ═══════ PROFILES ═══════ */
+.profiles-grid{padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;overflow-y:auto;background:var(--bg);transition:var(--transition);}
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-sm);}
+.profile-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.profile-card.add-card{border-style:dashed;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text3);font-size:13px;min-height:120px;}
+.profile-card.add-card:hover{color:var(--primary);border-color:var(--primary);}
+.pc-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.pc-avatar{width:42px;height:42px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;transition:var(--transition);}
+.pc-name{font-weight:700;font-size:14px;color:var(--text);}
+.pc-role{font-size:12px;color:var(--text2);margin-top:2px;}
+.pc-stats{display:flex;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.pc-stat{text-align:center;flex:1;}
+.pc-stat-val{font-size:18px;font-weight:700;}
+.pc-stat-label{font-size:10px;color:var(--text3);margin-top:1px;}
+.pc-mode{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:8px;transition:var(--transition);}
 
-.progress-bar { height: 5px; background: var(--surface3); border-radius: 3px; margin-bottom: 18px; transition: var(--transition); }
-.progress-fill {
-  height: 5px; background: var(--primary);
-  border-radius: 3px; transition: width 0.4s ease-in-out;
-}
+/* ═══════ ADMIN ═══════ */
+.admin-layout{display:flex;flex:1;overflow:hidden;}
+.admin-main{flex:1;overflow-y:auto;padding:20px;background:var(--bg);transition:var(--transition);}
+.admin-sidebar{width:280px;border-left:1px solid var(--border);padding:18px;overflow-y:auto;background:var(--surface);transition:var(--transition);}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;box-shadow:var(--shadow-sm);transition:var(--transition);}
+.kpi-val{font-size:22px;font-weight:800;margin-bottom:3px;}
+.kpi-label{font-size:11px;color:var(--text3);}
+.kpi-delta{font-size:11px;margin-top:4px;font-weight:600;}
+.delta-up{color:var(--green);}
+.section-title{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text2);}
+.cost-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:12px;}
+.cost-bar-label{width:100px;color:var(--text2);font-weight:500;}
+.cost-bar-bg{flex:1;height:6px;background:var(--surface3);border-radius:3px;}
+.cost-bar-fill{height:6px;border-radius:3px;transition:var(--transition);}
+.cost-bar-val{width:44px;text-align:right;font-weight:600;font-size:11px;}
+.toggle{width:34px;height:19px;border-radius:10px;cursor:pointer;position:relative;border:none;transition:var(--transition);}
+.toggle.on{background:var(--green);}
+.toggle.off{background:var(--surface3);}
+.toggle::after{content:'';width:13px;height:13px;border-radius:50%;background:white;position:absolute;top:3px;transition:all 0.3s ease-in-out;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.toggle.on::after{left:18px;} .toggle.off::after{left:3px;}
+.alert-box{background:var(--orange-dim);border:1px solid var(--orange);border-radius:var(--radius-md);padding:12px 14px;font-size:12px;margin-bottom:14px;line-height:1.5;transition:var(--transition);}
+.alert-title{font-weight:700;color:var(--orange);margin-bottom:4px;font-size:13px;}
+.quota-bar{margin-top:8px;}
+.quota-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px;}
 
-/* ═══════════════════════════════════════════
-   PROFILES SCREEN
-═══════════════════════════════════════════ */
-.profiles-grid {
-  padding: 24px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 16px;
-  overflow-y: auto;
-  background: var(--bg);
-  transition: var(--transition);
-}
-.profile-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 20px;
-  cursor: pointer;
-  transition: var(--transition);
-  box-shadow: var(--shadow-sm);
-}
-.profile-card:hover {
-  border-color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-.profile-card.add-card {
-  border-style: dashed;
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 8px;
-  color: var(--text3); font-size: 13px;
-  min-height: 130px;
-}
-.profile-card.add-card:hover { color: var(--primary); border-color: var(--primary); }
-.pc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.pc-avatar {
-  width: 44px; height: 44px;
-  border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  transition: var(--transition);
-}
-.pc-name { font-weight: 700; font-size: 15px; color: var(--text); }
-.pc-role { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.pc-stats {
-  display: flex; gap: 12px;
-  margin-top: 14px; padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-.pc-stat { text-align: center; flex: 1; }
-.pc-stat-val { font-size: 18px; font-weight: 700; }
-.pc-stat-label { font-size: 10px; color: var(--text3); margin-top: 1px; }
-.pc-mode {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 4px 10px; border-radius: 20px;
-  font-size: 11px; font-weight: 600; margin-top: 10px;
-  transition: var(--transition);
-}
+/* ═══════ SCROLLBAR ═══════ */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px;}
 
-/* ═══════════════════════════════════════════
-   ADMIN SCREEN
-═══════════════════════════════════════════ */
-.admin-layout { display: flex; flex: 1; overflow: hidden; }
-.admin-main { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg); transition: var(--transition); }
-.admin-sidebar {
-  width: 290px;
-  border-left: 1px solid var(--border);
-  padding: 20px; overflow-y: auto;
-  background: var(--surface);
-  transition: var(--transition);
-}
-.kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
-.kpi-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
-}
-.kpi-val { font-size: 24px; font-weight: 800; margin-bottom: 3px; }
-.kpi-label { font-size: 11px; color: var(--text3); font-weight: 500; }
-.kpi-delta { font-size: 11px; margin-top: 5px; font-weight: 600; }
-.delta-up { color: var(--green); }
-.delta-warn { color: var(--orange); }
-.section-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--text2); }
-.cost-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 12px; }
-.cost-bar-label { width: 110px; color: var(--text2); font-weight: 500; }
-.cost-bar-bg { flex: 1; height: 6px; background: var(--surface3); border-radius: 3px; }
-.cost-bar-fill { height: 6px; border-radius: 3px; transition: var(--transition); }
-.cost-bar-val { width: 50px; text-align: right; font-weight: 600; font-size: 12px; }
+/* ═══════ PROTO LABEL ═══════ */
+.proto-label{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:11px;color:var(--text2);z-index:200;box-shadow:var(--shadow-sm);white-space:nowrap;transition:var(--transition);}
 
-.toggle {
-  width: 34px; height: 19px;
-  border-radius: 10px; cursor: pointer;
-  position: relative; border: none;
-  transition: var(--transition);
-}
-.toggle.on  { background: var(--green); }
-.toggle.off { background: var(--surface3); }
-.toggle::after {
-  content:''; width:13px; height:13px;
-  border-radius: 50%; background: white;
-  position: absolute; top: 3px;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.toggle.on::after  { left: 18px; }
-.toggle.off::after { left: 3px; }
+/* ═══════ RTL SUPPORT ═══════ */
+[dir="rtl"] body{font-family:'Heebo','Inter','Segoe UI',system-ui,sans-serif;}
+[dir="rtl"] .topbar-nav{margin-left:0;margin-right:8px;}
+[dir="rtl"] .topbar-right{margin-left:0;margin-right:auto;}
+[dir="rtl"] .sidebar{border-right:none;border-left:1px solid var(--border);}
+[dir="rtl"] .sidebar-badge{margin-left:0;margin-right:auto;}
+[dir="rtl"] .page-actions{margin-left:0;margin-right:auto;}
+[dir="rtl"] .stats-row{margin-left:0;margin-right:auto;}
+[dir="rtl"] th{text-align:right;}
+[dir="rtl"] .user-dropdown{right:auto;left:0;}
+[dir="rtl"] .step-status{margin-left:0;margin-right:auto;}
+[dir="rtl"] .admin-sidebar{border-left:none;border-right:1px solid var(--border);}
+[dir="rtl"] .ud-arrow{display:inline-block;transform:scaleX(-1);}
+[dir="rtl"] .ud-item.open .ud-arrow{transform:scaleX(-1) rotate(90deg);}
+[dir="rtl"] .ud-item-icon{margin-right:0;margin-left:4px;}
+[dir="rtl"] .modal-header{flex-direction:row-reverse;}
 
-.alert-box {
-  background: var(--orange-dim);
-  border: 1px solid var(--orange);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  font-size: 12px; margin-bottom: 16px;
-  line-height: 1.5;
-  transition: var(--transition);
-}
-.alert-title { font-weight: 700; color: var(--orange); margin-bottom: 5px; font-size: 13px; }
-.quota-bar { margin-top: 10px; }
-.quota-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 4px; }
-
-/* ═══════════════════════════════════════════
-   SCROLLBAR
-═══════════════════════════════════════════ */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
-
-/* ═══════════════════════════════════════════
-   PROTO LABEL
-═══════════════════════════════════════════ */
-.proto-label {
-  position: fixed; bottom: 16px; left: 50%;
-  transform: translateX(-50%);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 7px 18px;
-  font-size: 11px; color: var(--text2);
-  z-index: 200;
-  box-shadow: var(--shadow-sm);
-  white-space: nowrap;
-  transition: var(--transition);
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — Mobile (<768px)
+═══════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  .hamburger{display:flex;}
+  .topbar-nav{display:none;}
+  .topbar-logo{font-size:14px;}
+  .topbar-logo-icon{width:24px;height:24px;font-size:12px;}
+  .sidebar{position:fixed;top:52px;left:-220px;bottom:0;width:210px;box-shadow:var(--shadow-md);}
+  .sidebar.open{left:0;}
+  [dir="rtl"] .sidebar{left:auto;right:-220px;}
+  [dir="rtl"] .sidebar.open{right:0;left:auto;}
+  .table-wrap{display:none;}
+  .job-cards{display:flex;}
+  .toolbar{overflow-x:auto;flex-wrap:nowrap;gap:6px;padding:8px 14px;}
+  .toolbar .stats-row{display:none;}
+  .search-box{min-width:140px;}
+  .page-header{padding:12px 14px;flex-wrap:wrap;gap:8px;}
+  .page-title{font-size:15px;}
+  .page-actions{margin-left:0;width:100%;}
+  .page-actions .btn{flex:1;font-size:12px;padding:7px 10px;}
+  .profiles-grid{grid-template-columns:1fr;padding:14px;}
+  .admin-layout{flex-direction:column;}
+  .admin-sidebar{width:100%;border-left:none;border-top:1px solid var(--border);}
+  [dir="rtl"] .admin-sidebar{border-right:none;border-top:1px solid var(--border);}
+  .kpi-row{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .modal{padding:18px;border-radius:var(--radius-md);}
+  .action-row{flex-direction:column;}
+  .action-row .btn{width:100%;}
+  .user-dropdown{right:auto;left:auto;min-width:200px;}
+  .proto-label{font-size:10px;padding:5px 12px;bottom:8px;}
+  .sidebar-item{min-height:44px;}
+  .btn{min-height:40px;}
+  .magic-btn{min-height:40px;}
 }
 </style>
 </head>
@@ -701,62 +370,86 @@ tr:hover td { background: var(--surface2); }
 
 <!-- ══════ TOP BAR ══════ -->
 <div class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
   <div class="topbar-logo">
     <div class="topbar-logo-icon">J</div>
     ProjectJOB
   </div>
   <div class="topbar-nav">
-    <button class="active" onclick="showScreen('dashboard',this)">⚡ Dashboard</button>
-    <button onclick="showScreen('profiles',this)">👤 Profiles</button>
-    <button onclick="showScreen('admin',this)">🛡 Admin</button>
+    <button class="active" onclick="showScreen('dashboard',this)" data-i18n="nav_dashboard">⚡ Dashboard</button>
+    <button onclick="showScreen('profiles',this)" data-i18n="nav_profiles">👤 Profiles</button>
+    <button onclick="showScreen('admin',this)" data-i18n="nav_admin">🛡 Admin</button>
   </div>
   <div class="topbar-right">
-    <!-- Theme Switcher -->
-    <div class="theme-switcher" title="Switch theme">
-      <div class="theme-dot td-steel active" onclick="setTheme('steel',this)" title="Professional Trust (Steel Blue)"></div>
-      <div class="theme-dot td-sage"  onclick="setTheme('sage',this)"  title="Growth & Harmony (Sage Green)"></div>
-      <div class="theme-dot td-teal"  onclick="setTheme('teal',this)"  title="Balanced Modernity (Deep Teal)"></div>
-      <div class="theme-dot td-sand"  onclick="setTheme('sand',this)"  title="Earthy Stability (Warm Sand)"></div>
+    <button class="lang-btn" id="lang-btn" onclick="toggleLang()" title="Language / שפה">EN</button>
+    <div class="user-menu">
+      <div class="user-avatar" onclick="toggleUserMenu(event)" title="Account">S</div>
+      <div class="user-dropdown" id="user-dropdown">
+        <div class="ud-identity">
+          <div class="ud-id-avatar">S</div>
+          <div>
+            <div class="ud-name">Shlomi Tsubery</div>
+            <div class="ud-email">ts.shlomi@gmail.com</div>
+          </div>
+        </div>
+        <div class="ud-divider"></div>
+
+        <!-- Theme -->
+        <div class="ud-item" id="theme-toggle" onclick="toggleThemePanel(this)">
+          <span><span class="ud-item-icon">🎨</span> <span data-i18n="menu_theme">Theme</span></span>
+          <span class="ud-arrow">›</span>
+        </div>
+        <div class="theme-panel" id="theme-panel">
+          <div class="theme-group-label" data-i18n="theme_light">☀️ Light</div>
+          <div class="theme-option active" data-theme="steel" onclick="setTheme('steel',this)"><span data-i18n="theme_steel">Steel Blue</span> <span class="theme-check">✓</span></div>
+          <div class="theme-option" data-theme="sage"  onclick="setTheme('sage',this)"  data-i18n="theme_sage">Sage Green</div>
+          <div class="theme-option" data-theme="teal"  onclick="setTheme('teal',this)"  data-i18n="theme_teal">Deep Teal</div>
+          <div class="theme-option" data-theme="sand"  onclick="setTheme('sand',this)"  data-i18n="theme_sand">Warm Sand</div>
+          <div class="theme-group-label" data-i18n="theme_dark">🌙 Dark</div>
+          <div class="theme-option" data-theme="navy"   onclick="setTheme('navy',this)"   data-i18n="theme_navy">Midnight Navy</div>
+          <div class="theme-option" data-theme="forest" onclick="setTheme('forest',this)" data-i18n="theme_forest">Forest Dark</div>
+        </div>
+
+        <!-- Brightness slider -->
+        <div class="ud-brightness">
+          <div class="ud-brightness-label">
+            <span data-i18n="menu_brightness">🔆 Brightness</span>
+            <span id="brightness-val">100%</span>
+          </div>
+          <input type="range" id="brightness-slider" min="70" max="130" value="100" step="1" oninput="setBrightness(this.value)" />
+        </div>
+
+        <div class="ud-divider"></div>
+        <div class="ud-item"><span><span class="ud-item-icon">⚙️</span> <span data-i18n="menu_settings">Settings</span></span></div>
+        <div class="ud-divider"></div>
+        <div class="ud-item ud-logout"><span><span class="ud-item-icon">↪</span> <span data-i18n="menu_logout">Log out</span></span></div>
+      </div>
     </div>
-    <div class="profile-chip" onclick="showScreen('profiles', document.querySelectorAll('.topbar-nav button')[1])">
-      <div class="profile-avatar">PM</div>
-      Infrastructure PMO ▾
-    </div>
-    <span class="mode-badge mode-copilot">Co-Pilot</span>
   </div>
 </div>
 
 <!-- ══════ LAYOUT ══════ -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="layout">
 
   <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="sidebar-section">Workspace</div>
-    <div class="sidebar-item active" onclick="showScreen('dashboard', document.querySelectorAll('.topbar-nav button')[0])">
-      <span class="icon">📋</span> Job Leads
-      <span class="sidebar-badge">47</span>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-section" data-i18n="sidebar_workspace">Workspace</div>
+    <div class="sidebar-item active" onclick="showScreen('dashboard',document.querySelectorAll('.topbar-nav button')[0]);closeSidebar()">
+      <span class="icon">📋</span> <span data-i18n="sidebar_job_leads">Job Leads</span> <span class="sidebar-badge">47</span>
     </div>
-    <div class="sidebar-item" onclick="showScreen('profiles', document.querySelectorAll('.topbar-nav button')[1])">
-      <span class="icon">👤</span> My Profiles
+    <div class="sidebar-item" onclick="showScreen('profiles',document.querySelectorAll('.topbar-nav button')[1]);closeSidebar()">
+      <span class="icon">👤</span> <span data-i18n="sidebar_my_profiles">My Profiles</span>
     </div>
-    <div class="sidebar-section">Tools</div>
-    <div class="sidebar-item">
-      <span class="icon">🔍</span> Scraper
+    <div class="sidebar-section" data-i18n="sidebar_tools">Tools</div>
+    <div class="sidebar-item"><span class="icon">🔍</span> <span data-i18n="sidebar_scraper">Scraper</span></div>
+    <div class="sidebar-item"><span class="icon">🤖</span> <span data-i18n="sidebar_autopilot_log">Autopilot Log</span> <span class="sidebar-badge green">3</span></div>
+    <div class="sidebar-item"><span class="icon">📄</span> <span data-i18n="sidebar_my_cvs">My CVs</span></div>
+    <div class="sidebar-section" data-i18n="sidebar_system">System</div>
+    <div class="sidebar-item" onclick="showScreen('admin',document.querySelectorAll('.topbar-nav button')[2]);closeSidebar()">
+      <span class="icon">🛡</span> <span data-i18n="sidebar_admin_center">Admin Center</span>
     </div>
-    <div class="sidebar-item">
-      <span class="icon">🤖</span> Autopilot Log
-      <span class="sidebar-badge green">3</span>
-    </div>
-    <div class="sidebar-item">
-      <span class="icon">📄</span> My CVs
-    </div>
-    <div class="sidebar-section">System</div>
-    <div class="sidebar-item" onclick="showScreen('admin', document.querySelectorAll('.topbar-nav button')[2])">
-      <span class="icon">🛡</span> Admin Center
-    </div>
-    <div class="sidebar-item">
-      <span class="icon">⚙️</span> Settings
-    </div>
+    <div class="sidebar-item"><span class="icon">⚙️</span> <span data-i18n="sidebar_settings">Settings</span></div>
   </div>
 
   <!-- ══════ MAIN ══════ -->
@@ -766,102 +459,96 @@ tr:hover td { background: var(--surface2); }
     <div class="screen active" id="screen-dashboard">
       <div class="page-header">
         <div>
-          <div class="page-title">Job Leads</div>
-          <div class="page-sub">47 active leads · Last scraped 12 min ago</div>
+          <div class="page-title" data-i18n="page_job_leads">Job Leads</div>
+          <div class="page-sub" data-i18n="page_job_leads_sub">47 active leads · Last scraped 12 min ago</div>
         </div>
         <div class="page-actions">
-          <button class="btn btn-ghost">🔄 Run Scraper</button>
-          <button class="btn btn-primary">+ Add Lead</button>
+          <button class="btn btn-ghost" data-i18n="btn_scrape">🔄 Scrape</button>
+          <button class="btn btn-primary" data-i18n="btn_add_lead">+ Add Lead</button>
         </div>
       </div>
       <div class="toolbar">
-        <div class="search-box">🔍 &nbsp;Search jobs, companies...</div>
-        <div class="filter-chip on">All Sources</div>
-        <div class="filter-chip">LinkedIn</div>
-        <div class="filter-chip">Gov Tenders</div>
-        <div class="filter-chip">Score ≥ 80%</div>
+        <div class="search-box" data-i18n="placeholder_search">🔍 &nbsp;Search...</div>
+        <div class="filter-chip on" data-i18n="filter_all">All</div>
+        <div class="filter-chip" data-i18n="filter_linkedin">LinkedIn</div>
+        <div class="filter-chip" data-i18n="filter_gov">Gov</div>
+        <div class="filter-chip" data-i18n="filter_ge80">≥80%</div>
         <div class="stats-row">
-          <div class="stat"><div class="stat-val" style="color:var(--green)">12</div><div class="stat-label">Sent</div></div>
-          <div class="stat"><div class="stat-val" style="color:var(--blue)">8</div><div class="stat-label">In Review</div></div>
-          <div class="stat"><div class="stat-val" style="color:var(--purple)">3</div><div class="stat-label">Autopilot</div></div>
-          <div class="stat"><div class="stat-val">47</div><div class="stat-label">Total</div></div>
+          <div class="stat"><div class="stat-val" style="color:var(--green)">12</div><div class="stat-label" data-i18n="stat_sent">Sent</div></div>
+          <div class="stat"><div class="stat-val" style="color:var(--blue)">8</div><div class="stat-label" data-i18n="stat_review">Review</div></div>
+          <div class="stat"><div class="stat-val" style="color:var(--purple)">3</div><div class="stat-label" data-i18n="stat_auto">Auto</div></div>
+          <div class="stat"><div class="stat-val">47</div><div class="stat-label" data-i18n="stat_total">Total</div></div>
         </div>
       </div>
+
+      <!-- DESKTOP TABLE -->
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Job Title / Company</th>
-              <th>Source</th>
-              <th>Posted</th>
-              <th>Match Score</th>
-              <th>Status</th>
-              <th>Autonomy</th>
-              <th>AI Strategy</th>
-              <th>Magic Button</th>
-              <th>Tailored CV</th>
-              <th>Applied</th>
-            </tr>
-          </thead>
+          <thead><tr>
+            <th data-i18n="th_job_title">Job Title / Company</th>
+            <th data-i18n="th_source">Source</th>
+            <th data-i18n="th_posted">Posted</th>
+            <th data-i18n="th_match">Match</th>
+            <th data-i18n="th_status">Status</th>
+            <th data-i18n="th_autonomy">Autonomy</th>
+            <th data-i18n="th_ai_strategy">AI Strategy</th>
+            <th data-i18n="th_magic_btn">Magic Button</th>
+            <th data-i18n="th_cv">CV</th>
+          </tr></thead>
           <tbody>
             <tr>
               <td class="col-title"><div class="job-title">Senior PMO Manager — Infrastructure</div><div class="company">Mekorot Water Authority</div></td>
               <td><span class="source-badge src-gov">🏛 Gov</span></td>
               <td style="color:var(--text2)">2h ago</td>
               <td><div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:95%;background:var(--green)"></div></div><span class="score-num score-high">95%</span></div></td>
-              <td><span class="status-badge s-reviewing">In Review</span></td>
-              <td><span class="mode-badge mode-autopilot">Autopilot</span></td>
-              <td><button class="reasoning-btn" onclick="openReasoning('mekorot')">🧠 View Strategy</button></td>
-              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()">✨ Apply Now</button></td>
-              <td style="color:var(--primary)">📄 Draft ready</td>
-              <td style="color:var(--text3)">—</td>
+              <td><span class="status-badge s-reviewing" data-i18n="status_in_review">In Review</span></td>
+              <td><span class="mode-badge mode-autopilot" data-i18n="mode_autopilot">Autopilot</span></td>
+              <td><button class="reasoning-btn" onclick="openReasoning('mekorot')" data-i18n="btn_strategy">🧠 Strategy</button></td>
+              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply">✨ Apply</button></td>
+              <td style="color:var(--primary);font-size:12px" data-i18n="cv_ready">📄 Ready</td>
             </tr>
             <tr>
               <td class="col-title"><div class="job-title">Project Manager — Digital Transformation</div><div class="company">HOT Mobile</div></td>
               <td><span class="source-badge src-linkedin">💼 LinkedIn</span></td>
               <td style="color:var(--text2)">5h ago</td>
               <td><div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:88%;background:var(--green)"></div></div><span class="score-num score-high">88%</span></div></td>
-              <td><span class="status-badge s-sent">✓ Sent</span></td>
-              <td><span class="mode-badge mode-copilot">Co-Pilot</span></td>
-              <td><button class="reasoning-btn" onclick="openReasoning('hot')">🧠 View Strategy</button></td>
-              <td><button class="magic-btn magic-btn-sent">✓ Applied</button></td>
-              <td style="color:var(--primary)">📄 Sent</td>
-              <td style="color:var(--text2);font-size:12px">Today 09:14</td>
+              <td><span class="status-badge s-sent" data-i18n="status_sent">✓ Sent</span></td>
+              <td><span class="mode-badge mode-copilot" data-i18n="mode_copilot">Co-Pilot</span></td>
+              <td><button class="reasoning-btn" onclick="openReasoning('hot')" data-i18n="btn_strategy">🧠 Strategy</button></td>
+              <td><button class="magic-btn magic-btn-sent" data-i18n="btn_applied">✓ Applied</button></td>
+              <td style="color:var(--primary);font-size:12px" data-i18n="cv_sent">📄 Sent</td>
             </tr>
             <tr>
               <td class="col-title"><div class="job-title">Agile Program Manager — Fintech</div><div class="company">Bank Hapoalim Digital</div></td>
               <td><span class="source-badge src-linkedin">💼 LinkedIn</span></td>
               <td style="color:var(--text2)">1d ago</td>
               <td><div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:82%;background:var(--yellow)"></div></div><span class="score-num score-mid">82%</span></div></td>
-              <td><span class="status-badge s-pending">Pending</span></td>
-              <td><span class="mode-badge mode-copilot">Co-Pilot</span></td>
-              <td><button class="reasoning-btn" onclick="openReasoning('hapoalim')">🧠 View Strategy</button></td>
-              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()">✨ Apply Now</button></td>
-              <td style="color:var(--text2);font-size:12px">Generating...</td>
-              <td style="color:var(--text3)">—</td>
+              <td><span class="status-badge s-pending" data-i18n="status_pending">Pending</span></td>
+              <td><span class="mode-badge mode-copilot" data-i18n="mode_copilot">Co-Pilot</span></td>
+              <td><button class="reasoning-btn" onclick="openReasoning('hapoalim')" data-i18n="btn_strategy">🧠 Strategy</button></td>
+              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply">✨ Apply</button></td>
+              <td style="color:var(--text2);font-size:12px" data-i18n="cv_generating">Generating...</td>
             </tr>
             <tr>
               <td class="col-title"><div class="job-title">Infrastructure Project Lead — Energy</div><div class="company">Israel Electric Corporation</div></td>
               <td><span class="source-badge src-gov">🏛 Noga</span></td>
               <td style="color:var(--text2)">1d ago</td>
               <td><div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:94%;background:var(--green)"></div></div><span class="score-num score-high">94%</span></div></td>
-              <td><span class="status-badge s-sent">✓ Auto-Sent</span></td>
-              <td><span class="mode-badge mode-autopilot">Autopilot</span></td>
-              <td><button class="reasoning-btn">🧠 View Strategy</button></td>
-              <td><button class="magic-btn magic-btn-sent">🤖 Auto-Applied</button></td>
-              <td style="color:var(--primary)">📄 Sent</td>
-              <td style="color:var(--text2);font-size:12px">Yesterday 22:03</td>
+              <td><span class="status-badge s-sent" data-i18n="status_auto">✓ Auto</span></td>
+              <td><span class="mode-badge mode-autopilot" data-i18n="mode_autopilot">Autopilot</span></td>
+              <td><button class="reasoning-btn" data-i18n="btn_strategy">🧠 Strategy</button></td>
+              <td><button class="magic-btn magic-btn-sent" data-i18n="btn_auto_applied">🤖 Auto-Applied</button></td>
+              <td style="color:var(--primary);font-size:12px" data-i18n="cv_sent">📄 Sent</td>
             </tr>
             <tr>
               <td class="col-title"><div class="job-title">PMO Director — Construction</div><div class="company">Danya Cebus</div></td>
               <td><span class="source-badge src-indeed">🔎 Indeed</span></td>
               <td style="color:var(--text2)">2d ago</td>
               <td><div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:71%;background:var(--yellow)"></div></div><span class="score-num score-mid">71%</span></div></td>
-              <td><span class="status-badge s-new">New</span></td>
-              <td style="color:var(--text3);font-size:12px">Manual</td>
-              <td><button class="reasoning-btn">🧠 View Strategy</button></td>
-              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()">✨ Apply Now</button></td>
-              <td style="color:var(--text3)">—</td>
+              <td><span class="status-badge s-new" data-i18n="status_new">New</span></td>
+              <td style="color:var(--text3);font-size:12px" data-i18n="mode_manual">Manual</td>
+              <td><button class="reasoning-btn" data-i18n="btn_strategy">🧠 Strategy</button></td>
+              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply">✨ Apply</button></td>
               <td style="color:var(--text3)">—</td>
             </tr>
             <tr>
@@ -869,11 +556,10 @@ tr:hover td { background: var(--surface2); }
               <td><span class="source-badge src-telegram">✈️ Telegram</span></td>
               <td style="color:var(--text2)">3d ago</td>
               <td><div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:55%;background:var(--orange)"></div></div><span class="score-num score-low">55%</span></div></td>
-              <td><span class="status-badge s-new">New</span></td>
-              <td style="color:var(--text3);font-size:12px">Manual only</td>
-              <td><button class="reasoning-btn">🧠 View Strategy</button></td>
-              <td><button class="magic-btn magic-btn-low" disabled>Low Match</button></td>
-              <td style="color:var(--text3)">—</td>
+              <td><span class="status-badge s-new" data-i18n="status_new">New</span></td>
+              <td style="color:var(--text3);font-size:12px" data-i18n="mode_manual">Manual</td>
+              <td><button class="reasoning-btn" data-i18n="btn_strategy">🧠 Strategy</button></td>
+              <td><button class="magic-btn magic-btn-low" disabled data-i18n="btn_low_match">Low Match</button></td>
               <td style="color:var(--text3)">—</td>
             </tr>
             <tr>
@@ -881,27 +567,93 @@ tr:hover td { background: var(--surface2); }
               <td><span class="source-badge src-facebook">👥 Facebook</span></td>
               <td style="color:var(--text2)">3d ago</td>
               <td><div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:79%;background:var(--yellow)"></div></div><span class="score-num score-mid">79%</span></div></td>
-              <td><span class="status-badge s-failed">⚠ Portal Error</span></td>
-              <td style="color:var(--text3);font-size:12px">Manual</td>
-              <td><button class="reasoning-btn">🧠 View Strategy</button></td>
-              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()">↩ Retry</button></td>
-              <td style="color:var(--orange);font-size:12px">⚠ Upload issue</td>
-              <td style="color:var(--text3)">—</td>
-            </tr>
-            <tr>
-              <td class="col-title"><div class="job-title">Project Manager — Defense Tender</div><div class="company">Ministry of Defense</div></td>
-              <td><span class="source-badge src-gov">🏛 Gov</span></td>
-              <td style="color:var(--text2)">4d ago</td>
-              <td><div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:91%;background:var(--green)"></div></div><span class="score-num score-high">91%</span></div></td>
-              <td><span class="status-badge s-reviewing">In Review</span></td>
-              <td><span class="mode-badge mode-autopilot">Autopilot</span></td>
-              <td><button class="reasoning-btn">🧠 View Strategy</button></td>
-              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()">✨ Apply Now</button></td>
-              <td style="color:var(--primary)">📄 Draft ready</td>
-              <td style="color:var(--text3)">—</td>
+              <td><span class="status-badge s-failed" data-i18n="status_error">⚠ Error</span></td>
+              <td style="color:var(--text3);font-size:12px" data-i18n="mode_manual">Manual</td>
+              <td><button class="reasoning-btn" data-i18n="btn_strategy">🧠 Strategy</button></td>
+              <td><button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_retry">↩ Retry</button></td>
+              <td style="color:var(--orange);font-size:12px" data-i18n="cv_upload_fail">⚠ Upload fail</td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- MOBILE CARDS -->
+      <div class="job-cards" id="job-cards">
+        <div class="job-card">
+          <div class="job-card-header">
+            <div><div class="job-card-title">Senior PMO Manager — Infrastructure</div><div class="job-card-company">Mekorot Water Authority</div></div>
+            <span class="score-num score-high" style="font-size:16px;flex-shrink:0">95%</span>
+          </div>
+          <div class="job-card-meta">
+            <span class="source-badge src-gov">🏛 Gov</span>
+            <span class="status-badge s-reviewing" data-i18n="status_in_review">In Review</span>
+            <span class="mode-badge mode-autopilot" data-i18n="mode_autopilot">Autopilot</span>
+            <span style="font-size:11px;color:var(--text3)">2h ago</span>
+          </div>
+          <div class="job-card-actions">
+            <button class="reasoning-btn" onclick="openReasoning('mekorot')" data-i18n="btn_strategy">🧠 Strategy</button>
+            <button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply_now">✨ Apply Now</button>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-header">
+            <div><div class="job-card-title">Project Manager — Digital Transformation</div><div class="job-card-company">HOT Mobile</div></div>
+            <span class="score-num score-high" style="font-size:16px;flex-shrink:0">88%</span>
+          </div>
+          <div class="job-card-meta">
+            <span class="source-badge src-linkedin">💼 LinkedIn</span>
+            <span class="status-badge s-sent" data-i18n="status_sent">✓ Sent</span>
+            <span class="mode-badge mode-copilot" data-i18n="mode_copilot">Co-Pilot</span>
+          </div>
+          <div class="job-card-actions">
+            <button class="reasoning-btn" onclick="openReasoning('hot')" data-i18n="btn_strategy">🧠 Strategy</button>
+            <button class="magic-btn magic-btn-sent" data-i18n="btn_applied">✓ Applied</button>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-header">
+            <div><div class="job-card-title">Agile Program Manager — Fintech</div><div class="job-card-company">Bank Hapoalim Digital</div></div>
+            <span class="score-num score-mid" style="font-size:16px;flex-shrink:0">82%</span>
+          </div>
+          <div class="job-card-meta">
+            <span class="source-badge src-linkedin">💼 LinkedIn</span>
+            <span class="status-badge s-pending" data-i18n="status_pending">Pending</span>
+            <span class="mode-badge mode-copilot" data-i18n="mode_copilot">Co-Pilot</span>
+          </div>
+          <div class="job-card-actions">
+            <button class="reasoning-btn" data-i18n="btn_strategy">🧠 Strategy</button>
+            <button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply_now">✨ Apply Now</button>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-header">
+            <div><div class="job-card-title">Infrastructure Project Lead — Energy</div><div class="job-card-company">Israel Electric Corporation</div></div>
+            <span class="score-num score-high" style="font-size:16px;flex-shrink:0">94%</span>
+          </div>
+          <div class="job-card-meta">
+            <span class="source-badge src-gov">🏛 Noga</span>
+            <span class="status-badge s-sent" data-i18n="status_auto">✓ Auto</span>
+            <span class="mode-badge mode-autopilot" data-i18n="mode_autopilot">Autopilot</span>
+          </div>
+          <div class="job-card-actions">
+            <button class="reasoning-btn" data-i18n="btn_strategy">🧠 Strategy</button>
+            <button class="magic-btn magic-btn-sent" data-i18n="btn_auto_applied">🤖 Auto-Applied</button>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-header">
+            <div><div class="job-card-title">VP Operations — Logistics</div><div class="job-card-company">Shippers Group</div></div>
+            <span class="score-num score-mid" style="font-size:16px;flex-shrink:0">79%</span>
+          </div>
+          <div class="job-card-meta">
+            <span class="source-badge src-facebook">👥 Facebook</span>
+            <span class="status-badge s-failed" data-i18n="status_error">⚠ Error</span>
+          </div>
+          <div class="job-card-actions">
+            <button class="reasoning-btn" data-i18n="btn_strategy">🧠 Strategy</button>
+            <button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_retry">↩ Retry</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -909,58 +661,55 @@ tr:hover td { background: var(--surface2); }
     <div class="screen" id="screen-profiles">
       <div class="page-header">
         <div>
-          <div class="page-title">Professional Profiles</div>
-          <div class="page-sub">Your AI Professional Agents · 2 of 5 active</div>
+          <div class="page-title" data-i18n="page_profiles">Professional Profiles</div>
+          <div class="page-sub" data-i18n="page_profiles_sub">AI Professional Agents · 2 of 5 active</div>
         </div>
         <div class="page-actions">
-          <button class="btn btn-ghost">⚙ Global Settings</button>
-          <button class="btn btn-primary">+ New Profile</button>
+          <button class="btn btn-ghost" data-i18n="btn_settings">⚙ Settings</button>
+          <button class="btn btn-primary" data-i18n="btn_new_profile">+ New Profile</button>
         </div>
       </div>
       <div class="profiles-grid">
         <div class="profile-card" style="border-color:var(--primary)">
           <div class="pc-header">
             <div class="pc-avatar" style="background:var(--primary-dim)">🏗</div>
-            <div><div class="pc-name">Infrastructure PMO</div><div class="pc-role">Senior Project Manager · Engineering</div></div>
+            <div><div class="pc-name">Infrastructure PMO</div><div class="pc-role">Senior PM · Engineering</div></div>
           </div>
           <div class="match-pills">
             <span class="match-pill mp-match">✓ Mekorot exp.</span>
-            <span class="match-pill mp-match">✓ HOT exp.</span>
             <span class="match-pill mp-match">✓ PMP certified</span>
             <span class="match-pill mp-gap">✗ No SAP</span>
           </div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.6">Autopilot threshold: <strong style="color:var(--text)">92%</strong> · CV: mekorot_pmo_v3.pdf</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6"><span data-i18n="label_autopilot_threshold">Autopilot threshold:</span> <strong style="color:var(--text)">92%</strong></div>
           <div class="pc-stats">
-            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--green)">12</div><div class="pc-stat-label">Applied</div></div>
-            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--primary)">34</div><div class="pc-stat-label">Leads</div></div>
-            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--yellow)">88%</div><div class="pc-stat-label">Avg Score</div></div>
+            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--green)">12</div><div class="pc-stat-label" data-i18n="stat_applied">Applied</div></div>
+            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--primary)">34</div><div class="pc-stat-label" data-i18n="stat_leads">Leads</div></div>
+            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--yellow)">88%</div><div class="pc-stat-label" data-i18n="stat_avg_score">Avg Score</div></div>
           </div>
-          <div class="pc-mode mode-autopilot">🤖 Autopilot Active</div>
+          <div class="pc-mode mode-autopilot" data-i18n="mode_autopilot_active">🤖 Autopilot Active</div>
         </div>
-
         <div class="profile-card">
           <div class="pc-header">
             <div class="pc-avatar" style="background:var(--purple-dim)">🎵</div>
-            <div><div class="pc-name">Music Producer / DJ</div><div class="pc-role">Creative · Entertainment Industry</div></div>
+            <div><div class="pc-name">Music Producer / DJ</div><div class="pc-role">Creative · Entertainment</div></div>
           </div>
           <div class="match-pills">
             <span class="match-pill mp-match">✓ Ableton Live</span>
             <span class="match-pill mp-match">✓ 15yr exp.</span>
             <span class="match-pill mp-gap">✗ No label mgmt</span>
           </div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.6">Autopilot threshold: <strong style="color:var(--text)">85%</strong> · CV: dj_shlomi_v1.pdf</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6"><span data-i18n="label_autopilot_threshold">Autopilot threshold:</span> <strong style="color:var(--text)">85%</strong></div>
           <div class="pc-stats">
-            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--green)">0</div><div class="pc-stat-label">Applied</div></div>
-            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--primary)">13</div><div class="pc-stat-label">Leads</div></div>
-            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--yellow)">72%</div><div class="pc-stat-label">Avg Score</div></div>
+            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--green)">0</div><div class="pc-stat-label" data-i18n="stat_applied">Applied</div></div>
+            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--primary)">13</div><div class="pc-stat-label" data-i18n="stat_leads">Leads</div></div>
+            <div class="pc-stat"><div class="pc-stat-val" style="color:var(--yellow)">72%</div><div class="pc-stat-label" data-i18n="stat_avg_score">Avg Score</div></div>
           </div>
-          <div class="pc-mode mode-copilot">🤝 Co-Pilot Mode</div>
+          <div class="pc-mode mode-copilot" data-i18n="mode_copilot_mode">🤝 Co-Pilot Mode</div>
         </div>
-
         <div class="profile-card add-card">
           <span style="font-size:24px">➕</span>
-          Add New Profile
-          <div style="font-size:11px;color:var(--text3)">3 of 5 slots remaining</div>
+          <span data-i18n="add_new_profile">Add New Profile</span>
+          <div data-i18n="slots_remaining" style="font-size:11px;color:var(--text3)">3 of 5 slots remaining</div>
         </div>
       </div>
     </div>
@@ -969,127 +718,83 @@ tr:hover td { background: var(--surface2); }
     <div class="screen" id="screen-admin">
       <div class="page-header">
         <div>
-          <div class="page-title">Admin Center</div>
-          <div class="page-sub">Platform management · Unit Economics · User permissions</div>
+          <div class="page-title" data-i18n="page_admin">Admin Center</div>
+          <div class="page-sub" data-i18n="page_admin_sub">Platform management · Unit Economics</div>
         </div>
         <div class="page-actions">
-          <button class="btn btn-ghost">📊 Export Report</button>
-          <button class="btn btn-primary">+ Add User</button>
+          <button class="btn btn-ghost" data-i18n="btn_export">📊 Export</button>
+          <button class="btn btn-primary" data-i18n="btn_add_user">+ Add User</button>
         </div>
       </div>
       <div class="admin-layout">
         <div class="admin-main">
           <div class="kpi-row">
-            <div class="kpi-card">
-              <div class="kpi-val" style="color:var(--primary)">47</div>
-              <div class="kpi-label">Total Users</div>
-              <div class="kpi-delta delta-up">↑ +3 this week</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-val" style="color:var(--green)">$142</div>
-              <div class="kpi-label">MRR</div>
-              <div class="kpi-delta delta-up">↑ +$18 vs last month</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-val" style="color:var(--orange)">$31.4</div>
-              <div class="kpi-label">API Cost (Month)</div>
-              <div class="kpi-delta delta-up">Margin: 78%</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-val" style="color:var(--purple)">312</div>
-              <div class="kpi-label">Magic Button Clicks</div>
-              <div class="kpi-delta delta-up">↑ +41% vs last month</div>
-            </div>
+            <div class="kpi-card"><div class="kpi-val" style="color:var(--primary)">47</div><div class="kpi-label" data-i18n="kpi_total_users">Total Users</div><div class="kpi-delta delta-up" data-i18n="kpi_delta_users">↑ +3 this week</div></div>
+            <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">$142</div><div class="kpi-label" data-i18n="kpi_mrr">MRR</div><div class="kpi-delta delta-up" data-i18n="kpi_delta_mrr">↑ +$18 MoM</div></div>
+            <div class="kpi-card"><div class="kpi-val" style="color:var(--orange)">$31.4</div><div class="kpi-label" data-i18n="kpi_api_cost">API Cost</div><div class="kpi-delta delta-up" data-i18n="kpi_delta_margin">Margin 78%</div></div>
+            <div class="kpi-card"><div class="kpi-val" style="color:var(--purple)">312</div><div class="kpi-label" data-i18n="kpi_magic_clicks">Magic Clicks</div><div class="kpi-delta delta-up" data-i18n="kpi_delta_magic">↑ +41% MoM</div></div>
           </div>
-
-          <div class="section-title">User Management Grid</div>
-          <div class="table-wrap" style="max-height:220px;border-radius:var(--radius-md);border:1px solid var(--border);overflow:hidden">
+          <div class="section-title" data-i18n="section_user_mgmt">User Management</div>
+          <div style="border-radius:var(--radius-md);border:1px solid var(--border);overflow:hidden;max-height:220px;overflow-y:auto;">
             <table>
-              <thead>
-                <tr>
-                  <th>User</th><th>Tier</th><th>Profiles</th><th>Magic Btn</th><th>Autopilot</th><th>Tokens Used</th><th>Limit</th><th>Actions</th>
-                </tr>
-              </thead>
+              <thead><tr>
+                <th data-i18n="th_user">User</th>
+                <th data-i18n="th_tier">Tier</th>
+                <th data-i18n="th_magic">Magic</th>
+                <th data-i18n="th_autopilot">Autopilot</th>
+                <th data-i18n="th_tokens">Tokens</th>
+                <th data-i18n="th_limit">Limit</th>
+                <th></th>
+              </tr></thead>
               <tbody>
                 <tr>
-                  <td><strong>Shlomi T.</strong> <span style="color:var(--purple);font-size:10px;font-weight:700">ADMIN</span></td>
+                  <td><strong>Shlomi T.</strong> <span style="color:var(--purple);font-size:10px">ADMIN</span></td>
                   <td><span class="status-badge" style="background:var(--purple-dim);color:var(--purple)">VIP</span></td>
-                  <td>2 / ∞</td>
                   <td><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></td>
                   <td><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></td>
-                  <td style="color:var(--green);font-weight:600">42K</td>
-                  <td style="color:var(--text2)">∞</td>
-                  <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">Edit</button></td>
+                  <td style="color:var(--green);font-weight:600">42K</td><td>∞</td>
+                  <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" data-i18n="btn_edit">Edit</button></td>
                 </tr>
                 <tr>
                   <td><strong>Dana K.</strong></td>
-                  <td><span class="status-badge s-pending">Premium</span></td>
-                  <td>3 / 5</td>
+                  <td><span class="status-badge s-pending" data-i18n="tier_premium">Premium</span></td>
                   <td><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></td>
                   <td><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></td>
-                  <td style="color:var(--yellow);font-weight:600">78K</td>
-                  <td style="color:var(--text2)">100K</td>
-                  <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">Edit</button></td>
-                </tr>
-                <tr>
-                  <td><strong>Amit R.</strong></td>
-                  <td><span class="status-badge s-new">Free</span></td>
-                  <td>1 / 1</td>
-                  <td><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></td>
-                  <td><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></td>
-                  <td style="color:var(--text2)">8K</td>
-                  <td style="color:var(--text2)">20K</td>
-                  <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">Edit</button></td>
+                  <td style="color:var(--yellow);font-weight:600">78K</td><td>100K</td>
+                  <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" data-i18n="btn_edit">Edit</button></td>
                 </tr>
                 <tr>
                   <td><strong>Noa S.</strong></td>
-                  <td><span class="status-badge s-pending">Premium</span></td>
-                  <td>2 / 5</td>
+                  <td><span class="status-badge s-pending" data-i18n="tier_premium">Premium</span></td>
                   <td><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></td>
                   <td><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></td>
-                  <td style="color:var(--orange);font-weight:600">94K</td>
-                  <td style="color:var(--text2)">100K</td>
-                  <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px">Edit</button></td>
+                  <td style="color:var(--orange);font-weight:600">94K</td><td>100K</td>
+                  <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" data-i18n="btn_edit">Edit</button></td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-
         <div class="admin-sidebar">
           <div class="alert-box">
-            <div class="alert-title">⚠ Usage Alert — Noa S.</div>
-            94% of monthly token limit reached. Consider increasing quota.
+            <div class="alert-title" data-i18n="alert_usage_title">⚠ Usage Alert — Noa S.</div>
+            <span data-i18n="alert_usage_body">94% of monthly token limit reached.</span>
             <div class="quota-bar">
-              <div class="quota-labels"><span>0</span><span>80% alert</span><span>100K</span></div>
+              <div class="quota-labels"><span>0</span><span>80%</span><span>100K</span></div>
               <div class="cost-bar-bg"><div class="cost-bar-fill" style="width:94%;background:var(--orange)"></div></div>
             </div>
           </div>
-
-          <div class="section-title">API Cost Breakdown</div>
-          <div class="cost-bar-row">
-            <div class="cost-bar-label">Claude Sonnet</div>
-            <div class="cost-bar-bg"><div class="cost-bar-fill" style="width:65%;background:var(--primary)"></div></div>
-            <div class="cost-bar-val" style="color:var(--primary)">$20.4</div>
-          </div>
-          <div class="cost-bar-row">
-            <div class="cost-bar-label">Gemini 1.5 Pro</div>
-            <div class="cost-bar-bg"><div class="cost-bar-fill" style="width:29%;background:var(--green)"></div></div>
-            <div class="cost-bar-val" style="color:var(--green)">$9.1</div>
-          </div>
-          <div class="cost-bar-row">
-            <div class="cost-bar-label">Playwright</div>
-            <div class="cost-bar-bg"><div class="cost-bar-fill" style="width:6%;background:var(--orange)"></div></div>
-            <div class="cost-bar-val" style="color:var(--orange)">$1.9</div>
-          </div>
-
-          <div class="section-title" style="margin-top:20px">Magic Button Funnel</div>
-          <div style="font-size:13px;display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">Triggered</span><strong>312</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">CV Generated</span><strong style="color:var(--primary)">298</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">Submitted</span><strong style="color:var(--green)">271</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">Interview invite</span><strong style="color:var(--purple)">14</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">Success rate</span><strong style="color:var(--yellow)">4.5%</strong></div>
+          <div class="section-title" data-i18n="section_api_cost">API Cost Breakdown</div>
+          <div class="cost-bar-row"><div class="cost-bar-label">Claude Sonnet</div><div class="cost-bar-bg"><div class="cost-bar-fill" style="width:65%;background:var(--primary)"></div></div><div class="cost-bar-val" style="color:var(--primary)">$20.4</div></div>
+          <div class="cost-bar-row"><div class="cost-bar-label">Gemini 1.5 Pro</div><div class="cost-bar-bg"><div class="cost-bar-fill" style="width:29%;background:var(--green)"></div></div><div class="cost-bar-val" style="color:var(--green)">$9.1</div></div>
+          <div class="cost-bar-row"><div class="cost-bar-label">Playwright</div><div class="cost-bar-bg"><div class="cost-bar-fill" style="width:6%;background:var(--orange)"></div></div><div class="cost-bar-val" style="color:var(--orange)">$1.9</div></div>
+          <div class="section-title" style="margin-top:18px" data-i18n="section_magic_funnel">Magic Button Funnel</div>
+          <div style="font-size:13px;display:flex;flex-direction:column;gap:7px;">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)" data-i18n="funnel_triggered">Triggered</span><strong>312</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)" data-i18n="funnel_cv_generated">CV Generated</span><strong style="color:var(--primary)">298</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)" data-i18n="funnel_submitted">Submitted</span><strong style="color:var(--green)">271</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)" data-i18n="funnel_interview">Interview</span><strong style="color:var(--purple)">14</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text2)" data-i18n="funnel_success_rate">Success rate</span><strong style="color:var(--yellow)">4.5%</strong></div>
           </div>
         </div>
       </div>
@@ -1098,46 +803,41 @@ tr:hover td { background: var(--surface2); }
   </div><!-- /main -->
 </div><!-- /layout -->
 
-<!-- ══════ REASONING LOG MODAL ══════ -->
+<!-- ══════ REASONING MODAL ══════ -->
 <div class="overlay" id="overlay-reasoning" onclick="if(event.target===this)closeReasoning()">
   <div class="modal modal-wide">
     <div class="modal-header">
       <div>
         <div class="modal-title" id="reasoning-title">🧠 AI Strategy — Senior PMO Manager</div>
-        <div class="modal-sub">Mekorot Water Authority · Match Score: <strong style="color:var(--green)">95%</strong> · Profile: Infrastructure PMO</div>
+        <div class="modal-sub">Mekorot Water Authority · Match: <strong style="color:var(--green)">95%</strong> · Profile: Infrastructure PMO</div>
       </div>
       <button class="modal-close" onclick="closeReasoning()">✕</button>
     </div>
     <div class="reasoning-section">
-      <div class="reasoning-label">Match Analysis</div>
+      <div class="reasoning-label" data-i18n="label_match_analysis">Match Analysis</div>
       <div class="match-pills">
         <span class="match-pill mp-match">✓ 12yr infrastructure exp.</span>
-        <span class="match-pill mp-match">✓ Mekorot project history</span>
+        <span class="match-pill mp-match">✓ Mekorot history</span>
         <span class="match-pill mp-match">✓ PMP Certified</span>
-        <span class="match-pill mp-match">✓ Multi-stakeholder mgmt</span>
-        <span class="match-pill mp-gap">✗ No SAP experience</span>
-        <span class="match-pill mp-gap">✗ No water-tech specific</span>
+        <span class="match-pill mp-gap">✗ No SAP</span>
+        <span class="match-pill mp-gap">✗ No water-tech</span>
       </div>
     </div>
     <div class="reasoning-section">
-      <div class="reasoning-label">Why This Job — AI Analysis</div>
-      <div class="reasoning-content">This role is a strong match based on your Mekorot project history from 2019–2022. The JD requires "managing cross-departmental infrastructure projects under regulatory constraints" — which directly mirrors your HOT Mobile rollout experience. The 12-year gap in water-tech can be bridged by emphasizing your utility-sector project governance framework.</div>
+      <div class="reasoning-label" data-i18n="label_why_job">Why This Job</div>
+      <div class="reasoning-content">Strong match based on your 2019–2022 Mekorot project history. The JD requires "cross-departmental infrastructure projects under regulatory constraints" — directly mirrors your HOT Mobile rollout. The water-tech gap can be bridged by emphasizing your utility-sector governance framework.</div>
     </div>
     <div class="reasoning-section">
-      <div class="reasoning-label">Tailoring Strategy</div>
-      <div class="reasoning-content">
-        <strong>1. Lead with Mekorot</strong> — Open the CV summary with the 2019 Mekorot pilot project. Use exact language: "national water infrastructure modernization."<br><br>
-        <strong>2. Bridge the SAP gap</strong> — Mention Oracle Primavera as an equivalent. Add: "Rapid ERP adaptation track record" in the skills section.<br><br>
-        <strong>3. Cover letter angle</strong> — Frame your HOT Mobile multi-site rollout as equivalent complexity to water infrastructure distribution.
-      </div>
+      <div class="reasoning-label" data-i18n="label_tailoring">Tailoring Strategy</div>
+      <div class="reasoning-content"><strong>1. Lead with Mekorot</strong> — Open CV summary with "national water infrastructure modernization."<br><br><strong>2. Bridge the SAP gap</strong> — Mention Oracle Primavera as equivalent. Add "Rapid ERP adaptation" to skills.<br><br><strong>3. Cover letter</strong> — Frame HOT Mobile multi-site rollout as equivalent complexity.</div>
     </div>
     <div class="reasoning-section">
-      <div class="reasoning-label">Execution Plan</div>
-      <div class="reasoning-content">Path: <strong>Web Form (Playwright)</strong> — Career portal at mekorot.co.il/careers<br>Estimated time: ~45 seconds · Form fields: 8 detected · File upload: PDF only</div>
+      <div class="reasoning-label" data-i18n="label_execution">Execution Plan</div>
+      <div class="reasoning-content">Path: <strong>Web Form (Playwright)</strong> · mekorot.co.il/careers · 8 fields · ~45 seconds</div>
     </div>
     <div class="action-row">
-      <button class="btn btn-ghost" onclick="closeReasoning()">Edit Strategy</button>
-      <button class="btn btn-green" onclick="closeReasoning();openMagic()">✓ Accept Strategy & Apply</button>
+      <button class="btn btn-ghost" onclick="closeReasoning()" data-i18n="btn_edit_strategy">Edit Strategy</button>
+      <button class="btn btn-green" onclick="closeReasoning();openMagic()" data-i18n="btn_accept_apply">✓ Accept &amp; Apply</button>
     </div>
   </div>
 </div>
@@ -1147,101 +847,319 @@ tr:hover td { background: var(--surface2); }
   <div class="modal">
     <div class="modal-header">
       <div>
-        <div class="modal-title">✨ Magic Button — Executing</div>
+        <div class="modal-title" data-i18n="magic_modal_title">✨ Magic Button — Executing</div>
         <div class="modal-sub">Senior PMO Manager · Mekorot Water Authority</div>
       </div>
       <button class="modal-close" onclick="closeMagic()">✕</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="magic-progress" style="width:0%"></div></div>
     <div class="magic-steps">
-      <div class="magic-step">
-        <div class="step-icon step-wait" id="step1-icon">📄</div>
-        <div class="step-info"><div class="step-name">CV Tailoring</div><div class="step-detail">Generating JD-optimized PDF via Claude Sonnet</div></div>
-        <div class="step-status ss-wait" id="step1-status">Waiting</div>
-      </div>
-      <div class="magic-step">
-        <div class="step-icon step-wait" id="step2-icon">🌐</div>
-        <div class="step-info"><div class="step-name">Portal Login</div><div class="step-detail">Playwright → mekorot.co.il/careers</div></div>
-        <div class="step-status ss-wait" id="step2-status">Waiting</div>
-      </div>
-      <div class="magic-step">
-        <div class="step-icon step-wait" id="step3-icon">📝</div>
-        <div class="step-info"><div class="step-name">Form Fill</div><div class="step-detail">8 fields detected · Auto-populating from profile</div></div>
-        <div class="step-status ss-wait" id="step3-status">Waiting</div>
-      </div>
-      <div class="magic-step">
-        <div class="step-icon step-wait" id="step4-icon">📤</div>
-        <div class="step-info"><div class="step-name">Submit & Log</div><div class="step-detail">Upload tailored CV + cover letter, record audit trail</div></div>
-        <div class="step-status ss-wait" id="step4-status">Waiting</div>
-      </div>
+      <div class="magic-step"><div class="step-icon step-wait" id="step1-icon">📄</div><div class="step-info"><div class="step-name" data-i18n="step1_name">CV Tailoring</div><div class="step-detail" data-i18n="step1_detail">Generating JD-optimized PDF via Claude Sonnet</div></div><div class="step-status ss-wait" id="step1-status" data-i18n="step_waiting">Waiting</div></div>
+      <div class="magic-step"><div class="step-icon step-wait" id="step2-icon">🌐</div><div class="step-info"><div class="step-name" data-i18n="step2_name">Portal Login</div><div class="step-detail" data-i18n="step2_detail">Playwright → mekorot.co.il/careers</div></div><div class="step-status ss-wait" id="step2-status" data-i18n="step_waiting">Waiting</div></div>
+      <div class="magic-step"><div class="step-icon step-wait" id="step3-icon">📝</div><div class="step-info"><div class="step-name" data-i18n="step3_name">Form Fill</div><div class="step-detail" data-i18n="step3_detail">8 fields detected · Auto-populating from profile</div></div><div class="step-status ss-wait" id="step3-status" data-i18n="step_waiting">Waiting</div></div>
+      <div class="magic-step"><div class="step-icon step-wait" id="step4-icon">📤</div><div class="step-info"><div class="step-name" data-i18n="step4_name">Submit &amp; Log</div><div class="step-detail" data-i18n="step4_detail">Upload tailored CV + cover letter, audit trail</div></div><div class="step-status ss-wait" id="step4-status" data-i18n="step_waiting">Waiting</div></div>
     </div>
-    <div id="magic-result" style="display:none;text-align:center;padding:16px;background:var(--green-dim);border-radius:var(--radius-md);color:var(--green);font-weight:700;font-size:14px;line-height:1.6">
-      ✅ Application submitted successfully!<br><span style="font-weight:400;font-size:12px">Status updated to "Sent" · Audit trail saved</span>
+    <div id="magic-result">
+      <span data-i18n="magic_success">✅ Application submitted!</span><br>
+      <span data-i18n="magic_success_sub" style="font-weight:400;font-size:12px">Status → "Sent" · Audit trail saved</span>
     </div>
   </div>
 </div>
 
-<div class="proto-label">🎨 Prototype v2 · Click the 4 dots to switch themes · All interactions are live</div>
+<div class="proto-label" data-i18n="proto_label">🎨 Prototype v3 · Avatar → Theme &amp; Brightness · ☰ for mobile menu</div>
 
 <script>
-  function showScreen(id, btn) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + id).classList.add('active');
-    document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-  }
+// ══════════════════════════════════════════════════════
+// i18n ENGINE
+// To add a new language: add a new key block to TRANSLATIONS
+// and add a toggle case in toggleLang().
+// ══════════════════════════════════════════════════════
+const TRANSLATIONS = {
+  en: {
+    // Navigation
+    nav_dashboard:'⚡ Dashboard', nav_profiles:'👤 Profiles', nav_admin:'🛡 Admin',
+    // User menu
+    menu_theme:'Theme', theme_light:'☀️ Light', theme_steel:'Steel Blue', theme_sage:'Sage Green',
+    theme_teal:'Deep Teal', theme_sand:'Warm Sand', theme_dark:'🌙 Dark',
+    theme_navy:'Midnight Navy', theme_forest:'Forest Dark',
+    menu_brightness:'🔆 Brightness', menu_settings:'Settings', menu_logout:'Log out',
+    // Sidebar
+    sidebar_workspace:'Workspace', sidebar_job_leads:'Job Leads', sidebar_my_profiles:'My Profiles',
+    sidebar_tools:'Tools', sidebar_scraper:'Scraper', sidebar_autopilot_log:'Autopilot Log',
+    sidebar_my_cvs:'My CVs', sidebar_system:'System', sidebar_admin_center:'Admin Center',
+    sidebar_settings:'Settings',
+    // Dashboard
+    page_job_leads:'Job Leads', page_job_leads_sub:'47 active leads · Last scraped 12 min ago',
+    btn_scrape:'🔄 Scrape', btn_add_lead:'+ Add Lead', placeholder_search:'🔍  Search...',
+    filter_all:'All', filter_linkedin:'LinkedIn', filter_gov:'Gov', filter_ge80:'≥80%',
+    stat_sent:'Sent', stat_review:'Review', stat_auto:'Auto', stat_total:'Total',
+    // Table headers
+    th_job_title:'Job Title / Company', th_source:'Source', th_posted:'Posted',
+    th_match:'Match', th_status:'Status', th_autonomy:'Autonomy', th_ai_strategy:'AI Strategy',
+    th_magic_btn:'Magic Button', th_cv:'CV', th_user:'User', th_tier:'Tier',
+    th_magic:'Magic', th_autopilot:'Autopilot', th_tokens:'Tokens', th_limit:'Limit',
+    // Status / mode badges
+    status_in_review:'In Review', status_sent:'✓ Sent', status_pending:'Pending',
+    status_new:'New', status_auto:'✓ Auto', status_error:'⚠ Error',
+    mode_autopilot:'Autopilot', mode_copilot:'Co-Pilot', mode_manual:'Manual',
+    // CV column
+    cv_ready:'📄 Ready', cv_generating:'Generating...', cv_sent:'📄 Sent', cv_upload_fail:'⚠ Upload fail',
+    // Buttons
+    btn_strategy:'🧠 Strategy', btn_apply:'✨ Apply', btn_applied:'✓ Applied',
+    btn_auto_applied:'🤖 Auto-Applied', btn_low_match:'Low Match', btn_retry:'↩ Retry',
+    btn_apply_now:'✨ Apply Now', btn_settings:'⚙ Settings', btn_new_profile:'+ New Profile',
+    btn_export:'📊 Export', btn_add_user:'+ Add User', btn_edit:'Edit',
+    btn_edit_strategy:'Edit Strategy', btn_accept_apply:'✓ Accept & Apply',
+    // Profiles
+    page_profiles:'Professional Profiles', page_profiles_sub:'AI Professional Agents · 2 of 5 active',
+    label_autopilot_threshold:'Autopilot threshold:',
+    stat_applied:'Applied', stat_leads:'Leads', stat_avg_score:'Avg Score',
+    mode_autopilot_active:'🤖 Autopilot Active', mode_copilot_mode:'🤝 Co-Pilot Mode',
+    add_new_profile:'Add New Profile', slots_remaining:'3 of 5 slots remaining',
+    tier_premium:'Premium',
+    // Admin
+    page_admin:'Admin Center', page_admin_sub:'Platform management · Unit Economics',
+    kpi_total_users:'Total Users', kpi_mrr:'MRR', kpi_api_cost:'API Cost', kpi_magic_clicks:'Magic Clicks',
+    kpi_delta_users:'↑ +3 this week', kpi_delta_mrr:'↑ +$18 MoM',
+    kpi_delta_margin:'Margin 78%', kpi_delta_magic:'↑ +41% MoM',
+    section_user_mgmt:'User Management', section_api_cost:'API Cost Breakdown',
+    section_magic_funnel:'Magic Button Funnel',
+    alert_usage_title:'⚠ Usage Alert — Noa S.', alert_usage_body:'94% of monthly token limit reached.',
+    funnel_triggered:'Triggered', funnel_cv_generated:'CV Generated', funnel_submitted:'Submitted',
+    funnel_interview:'Interview', funnel_success_rate:'Success rate',
+    // Reasoning modal
+    label_match_analysis:'Match Analysis', label_why_job:'Why This Job',
+    label_tailoring:'Tailoring Strategy', label_execution:'Execution Plan',
+    reasoning_title_mekorot:'🧠 AI Strategy — Senior PMO Manager',
+    reasoning_title_hot:'🧠 AI Strategy — Digital Transformation PM',
+    reasoning_title_hapoalim:'🧠 AI Strategy — Agile Program Manager',
+    reasoning_title_default:'🧠 AI Strategy',
+    // Magic modal
+    magic_modal_title:'✨ Magic Button — Executing',
+    step1_name:'CV Tailoring', step1_detail:'Generating JD-optimized PDF via Claude Sonnet',
+    step2_name:'Portal Login', step2_detail:'Playwright → mekorot.co.il/careers',
+    step3_name:'Form Fill', step3_detail:'8 fields detected · Auto-populating from profile',
+    step4_name:'Submit & Log', step4_detail:'Upload tailored CV + cover letter, audit trail',
+    step_waiting:'Waiting',
+    step1_running:'Generating...', step1_done:'✓ Done',
+    step2_running:'Connecting...', step2_done:'✓ Login OK',
+    step3_running:'Filling...', step3_done:'✓ 8/8 fields',
+    step4_running:'Submitting...', step4_done:'✓ Sent!',
+    magic_success:'✅ Application submitted!',
+    magic_success_sub:'Status → "Sent" · Audit trail saved',
+    // Proto label
+    proto_label:'🎨 Prototype v3 · Avatar → Theme & Brightness · ☰ for mobile menu',
+  },
+  he: {
+    // Navigation
+    nav_dashboard:'⚡ לוח בקרה', nav_profiles:'👤 פרופילים', nav_admin:'🛡 ניהול',
+    // User menu
+    menu_theme:'ערכת נושא', theme_light:'☀️ בהיר', theme_steel:'כחול פלדה', theme_sage:'ירוק מרווה',
+    theme_teal:'טיל עמוק', theme_sand:'חול חם', theme_dark:'🌙 כהה',
+    theme_navy:'כחול חצות', theme_forest:'יער כהה',
+    menu_brightness:'🔆 בהירות', menu_settings:'הגדרות', menu_logout:'התנתק',
+    // Sidebar
+    sidebar_workspace:'סביבת עבודה', sidebar_job_leads:'משרות', sidebar_my_profiles:'הפרופילים שלי',
+    sidebar_tools:'כלים', sidebar_scraper:'סורק', sidebar_autopilot_log:'יומן אוטופיילוט',
+    sidebar_my_cvs:'קורות החיים שלי', sidebar_system:'מערכת', sidebar_admin_center:'מרכז ניהול',
+    sidebar_settings:'הגדרות',
+    // Dashboard
+    page_job_leads:'משרות', page_job_leads_sub:'47 משרות פעילות · סריקה אחרונה לפני 12 דקות',
+    btn_scrape:'🔄 סרוק', btn_add_lead:'+ הוסף משרה', placeholder_search:'🔍  חיפוש...',
+    filter_all:'הכל', filter_linkedin:'לינקדאין', filter_gov:'ממשלתי', filter_ge80:'≥80%',
+    stat_sent:'נשלח', stat_review:'בבדיקה', stat_auto:'אוטו', stat_total:'סך הכל',
+    // Table headers
+    th_job_title:'משרה / חברה', th_source:'מקור', th_posted:'פורסם',
+    th_match:'התאמה', th_status:'סטטוס', th_autonomy:'מצב', th_ai_strategy:'אסטרטגיית AI',
+    th_magic_btn:'כפתור קסם', th_cv:'קו"ח', th_user:'משתמש', th_tier:'רמה',
+    th_magic:'קסם', th_autopilot:'אוטופיילוט', th_tokens:'טוקנים', th_limit:'מגבלה',
+    // Status / mode badges
+    status_in_review:'בבדיקה', status_sent:'✓ נשלח', status_pending:'ממתין',
+    status_new:'חדש', status_auto:'✓ אוטו', status_error:'⚠ שגיאה',
+    mode_autopilot:'אוטופיילוט', mode_copilot:'קו-פיילוט', mode_manual:'ידני',
+    // CV column
+    cv_ready:'📄 מוכן', cv_generating:'מייצר...', cv_sent:'📄 נשלח', cv_upload_fail:'⚠ שגיאת העלאה',
+    // Buttons
+    btn_strategy:'🧠 אסטרטגיה', btn_apply:'✨ הגש', btn_applied:'✓ הוגש',
+    btn_auto_applied:'🤖 הוגש אוטומטית', btn_low_match:'התאמה נמוכה', btn_retry:'↩ נסה שוב',
+    btn_apply_now:'✨ הגש עכשיו', btn_settings:'⚙ הגדרות', btn_new_profile:'+ פרופיל חדש',
+    btn_export:'📊 ייצא', btn_add_user:'+ הוסף משתמש', btn_edit:'ערוך',
+    btn_edit_strategy:'ערוך אסטרטגיה', btn_accept_apply:'✓ אשר והגש',
+    // Profiles
+    page_profiles:'פרופילים מקצועיים', page_profiles_sub:'סוכני AI מקצועיים · 2 מתוך 5 פעילים',
+    label_autopilot_threshold:'סף אוטופיילוט:',
+    stat_applied:'הוגש', stat_leads:'משרות', stat_avg_score:'ציון ממוצע',
+    mode_autopilot_active:'🤖 אוטופיילוט פעיל', mode_copilot_mode:'🤝 מצב קו-פיילוט',
+    add_new_profile:'הוסף פרופיל חדש', slots_remaining:'3 מתוך 5 חריצים פנויים',
+    tier_premium:'פרמיום',
+    // Admin
+    page_admin:'מרכז ניהול', page_admin_sub:'ניהול פלטפורמה · כלכלת יחידה',
+    kpi_total_users:'סך משתמשים', kpi_mrr:'הכנסה חודשית', kpi_api_cost:'עלות API', kpi_magic_clicks:'לחיצות קסם',
+    kpi_delta_users:'↑ +3 השבוע', kpi_delta_mrr:'↑ +$18 לחודש',
+    kpi_delta_margin:'מרווח 78%', kpi_delta_magic:'↑ +41% לחודש',
+    section_user_mgmt:'ניהול משתמשים', section_api_cost:'פירוט עלות API',
+    section_magic_funnel:'משפך כפתור הקסם',
+    alert_usage_title:'⚠ התראת שימוש — Noa S.', alert_usage_body:'94% ממגבלת הטוקנים החודשית הושגה.',
+    funnel_triggered:'הופעל', funnel_cv_generated:'קו"ח נוצר', funnel_submitted:'הוגש',
+    funnel_interview:'ראיון', funnel_success_rate:'שיעור הצלחה',
+    // Reasoning modal
+    label_match_analysis:'ניתוח התאמה', label_why_job:'למה המשרה הזו',
+    label_tailoring:'אסטרטגיית התאמה', label_execution:'תוכנית ביצוע',
+    reasoning_title_mekorot:'🧠 אסטרטגיית AI — מנהל פרויקטים בכיר',
+    reasoning_title_hot:'🧠 אסטרטגיית AI — מנהל טרנספורמציה דיגיטלית',
+    reasoning_title_hapoalim:'🧠 אסטרטגיית AI — מנהל תוכנית אג\'ייל',
+    reasoning_title_default:'🧠 אסטרטגיית AI',
+    // Magic modal
+    magic_modal_title:'✨ כפתור קסם — מבצע',
+    step1_name:'התאמת קו"ח', step1_detail:'יוצר PDF מותאם למשרה באמצעות Claude Sonnet',
+    step2_name:'כניסה לפורטל', step2_detail:'Playwright → mekorot.co.il/careers',
+    step3_name:'מילוי טופס', step3_detail:'8 שדות זוהו · ממלא מהפרופיל',
+    step4_name:'שליחה ותיעוד', step4_detail:'מעלה קו"ח ומכתב מקדים, שביל ביקורת',
+    step_waiting:'ממתין',
+    step1_running:'מייצר...', step1_done:'✓ הושלם',
+    step2_running:'מתחבר...', step2_done:'✓ כניסה בוצעה',
+    step3_running:'ממלא...', step3_done:'✓ 8/8 שדות',
+    step4_running:'שולח...', step4_done:'✓ נשלח!',
+    magic_success:'✅ הבקשה הוגשה בהצלחה!',
+    magic_success_sub:'סטטוס → "נשלח" · שביל ביקורת נשמר',
+    // Proto label
+    proto_label:'🎨 אב-טיפוס v3 · אווטאר → ערכת נושא · ☰ לתפריט נייד',
+  },
+};
 
-  function setTheme(theme, dot) {
-    document.body.setAttribute('data-theme', theme === 'steel' ? '' : theme);
-    document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
-    dot.classList.add('active');
-  }
+let currentLocale = localStorage.getItem('locale') || 'en';
 
-  function openReasoning(job) {
-    const titles = {
-      mekorot: '🧠 AI Strategy — Senior PMO Manager',
-      hot: '🧠 AI Strategy — Digital Transformation PM',
-      hapoalim: '🧠 AI Strategy — Agile Program Manager'
-    };
-    document.getElementById('reasoning-title').textContent = titles[job] || '🧠 AI Strategy';
-    document.getElementById('overlay-reasoning').classList.add('open');
-  }
-  function closeReasoning() { document.getElementById('overlay-reasoning').classList.remove('open'); }
+function t(key) {
+  return (TRANSLATIONS[currentLocale] && TRANSLATIONS[currentLocale][key])
+      || (TRANSLATIONS['en'] && TRANSLATIONS['en'][key])
+      || key;
+}
 
-  function openMagic() {
-    document.getElementById('overlay-magic').classList.add('open');
-    document.getElementById('magic-result').style.display = 'none';
-    resetSteps();
-    const steps = [
-      { delay: 400,  doneDelay: 1400,  icon: 'step1-icon', status: 'step1-status', runText: 'Generating...', doneText: '✓ Done' },
-      { delay: 1600, doneDelay: 2600,  icon: 'step2-icon', status: 'step2-status', runText: 'Connecting...', doneText: '✓ Login OK' },
-      { delay: 2800, doneDelay: 3800,  icon: 'step3-icon', status: 'step3-status', runText: 'Filling...', doneText: '✓ 8/8 fields' },
-      { delay: 4000, doneDelay: 5000,  icon: 'step4-icon', status: 'step4-status', runText: 'Submitting...', doneText: '✓ Sent!' },
-    ];
-    steps.forEach((s, i) => {
-      setTimeout(() => {
-        document.getElementById(s.icon).className = 'step-icon step-active';
-        document.getElementById(s.status).textContent = s.runText;
-        document.getElementById(s.status).className = 'step-status ss-running';
-      }, s.delay);
-      setTimeout(() => {
-        document.getElementById(s.icon).className = 'step-icon step-done';
-        document.getElementById(s.status).textContent = s.doneText;
-        document.getElementById(s.status).className = 'step-status ss-done';
-        document.getElementById('magic-progress').style.width = ((i+1)*25) + '%';
-        if (i === steps.length - 1) setTimeout(() => { document.getElementById('magic-result').style.display = 'block'; }, 300);
-      }, s.doneDelay);
-    });
+function setLocale(lang) {
+  currentLocale = lang;
+  localStorage.setItem('locale', lang);
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  const btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = lang === 'en' ? 'EN' : 'עב';
+}
+
+function toggleLang() {
+  // To add more languages, extend this cycle: en → he → fr → en etc.
+  setLocale(currentLocale === 'en' ? 'he' : 'en');
+}
+
+// ── Navigation ──
+function showScreen(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// ── Sidebar (mobile) ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ── User menu dropdown ──
+function toggleUserMenu(e) {
+  e.stopPropagation();
+  document.getElementById('user-dropdown').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('user-dropdown');
+  if (!document.querySelector('.user-menu').contains(e.target)) {
+    menu.classList.remove('open');
   }
-  function closeMagic() { document.getElementById('overlay-magic').classList.remove('open'); resetSteps(); }
-  function resetSteps() {
-    document.getElementById('magic-progress').style.width = '0%';
-    [1,2,3,4].forEach(i => {
-      document.getElementById('step'+i+'-icon').className = 'step-icon step-wait';
-      document.getElementById('step'+i+'-status').textContent = 'Waiting';
-      document.getElementById('step'+i+'-status').className = 'step-status ss-wait';
-    });
-  }
+});
+
+// ── Theme panel toggle ──
+function toggleThemePanel(el) {
+  const panel = document.getElementById('theme-panel');
+  panel.classList.toggle('open');
+  el.classList.toggle('open');
+}
+
+// ── Set theme ──
+function setTheme(theme, el) {
+  document.body.setAttribute('data-theme', theme === 'steel' ? '' : theme);
+  document.querySelectorAll('.theme-option').forEach(o => {
+    o.classList.remove('active');
+    const check = o.querySelector('.theme-check');
+    if (check) check.remove();
+  });
+  el.classList.add('active');
+  el.insertAdjacentHTML('beforeend', '<span class="theme-check">✓</span>');
+  document.getElementById('brightness-slider').value = 100;
+  document.getElementById('brightness-val').textContent = '100%';
+  document.body.style.filter = '';
+}
+
+// ── Brightness slider ──
+function setBrightness(val) {
+  document.body.style.filter = `brightness(${val / 100})`;
+  document.getElementById('brightness-val').textContent = val + '%';
+}
+
+// ── Reasoning modal ──
+function openReasoning(job) {
+  const keys = {
+    mekorot: 'reasoning_title_mekorot',
+    hot:     'reasoning_title_hot',
+    hapoalim:'reasoning_title_hapoalim',
+  };
+  document.getElementById('reasoning-title').textContent = t(keys[job] || 'reasoning_title_default');
+  document.getElementById('overlay-reasoning').classList.add('open');
+}
+function closeReasoning() { document.getElementById('overlay-reasoning').classList.remove('open'); }
+
+// ── Magic button modal ──
+function openMagic() {
+  document.getElementById('overlay-magic').classList.add('open');
+  document.getElementById('magic-result').style.display = 'none';
+  resetSteps();
+  const steps = [
+    { delay:400,  done:1400, icon:'step1-icon', status:'step1-status', run:t('step1_running'), doneText:t('step1_done') },
+    { delay:1600, done:2600, icon:'step2-icon', status:'step2-status', run:t('step2_running'), doneText:t('step2_done') },
+    { delay:2800, done:3800, icon:'step3-icon', status:'step3-status', run:t('step3_running'), doneText:t('step3_done') },
+    { delay:4000, done:5000, icon:'step4-icon', status:'step4-status', run:t('step4_running'), doneText:t('step4_done') },
+  ];
+  steps.forEach((s, i) => {
+    setTimeout(() => {
+      document.getElementById(s.icon).className = 'step-icon step-active';
+      document.getElementById(s.status).textContent = s.run;
+      document.getElementById(s.status).className = 'step-status ss-running';
+    }, s.delay);
+    setTimeout(() => {
+      document.getElementById(s.icon).className = 'step-icon step-done';
+      document.getElementById(s.status).textContent = s.doneText;
+      document.getElementById(s.status).className = 'step-status ss-done';
+      document.getElementById('magic-progress').style.width = ((i+1)*25)+'%';
+      if (i === steps.length-1) setTimeout(() => { document.getElementById('magic-result').style.display = 'block'; }, 300);
+    }, s.done);
+  });
+}
+function closeMagic() { document.getElementById('overlay-magic').classList.remove('open'); resetSteps(); }
+function resetSteps() {
+  document.getElementById('magic-progress').style.width = '0%';
+  [1,2,3,4].forEach(i => {
+    document.getElementById('step'+i+'-icon').className = 'step-icon step-wait';
+    document.getElementById('step'+i+'-status').textContent = t('step_waiting');
+    document.getElementById('step'+i+'-status').className = 'step-status ss-wait';
+  });
+}
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', () => setLocale(currentLocale));
 </script>
 </body>
 </html>
