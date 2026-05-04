@@ -364,6 +364,40 @@ tr:hover td{background:var(--surface2);}
   .btn{min-height:40px;}
   .magic-btn{min-height:40px;}
 }
+
+/* ═══════ JOB CARD MODAL ═══════ */
+.modal-xl{max-width:800px;}
+.jc-logo{width:46px;height:46px;border-radius:var(--radius-md);background:var(--primary-dim);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.jc-title{font-size:17px;font-weight:800;color:var(--text);line-height:1.3;}
+.jc-meta{font-size:12px;color:var(--text2);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.jc-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;}
+.jc-fact{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;}
+.jc-fact-icon{font-size:14px;margin-bottom:2px;}
+.jc-fact-label{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.jc-fact-val{font-size:13px;font-weight:600;color:var(--text);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.jc-section{margin-bottom:12px;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-md);}
+.jc-section-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px;}
+/* Salary */
+.sal-bar-wrap{position:relative;height:10px;background:var(--surface3);border-radius:5px;margin:8px 0 4px;}
+.sal-bar-gradient{height:10px;border-radius:5px;background:linear-gradient(90deg,var(--yellow) 0%,var(--green) 60%,var(--primary) 100%);}
+.sal-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:var(--primary);border:3px solid var(--surface);box-shadow:var(--shadow-sm);}
+.sal-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:2px;}
+/* Network */
+.conn-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;}
+.conn-avatar{width:32px;height:32px;border-radius:50%;background:var(--primary-dim);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--primary);flex-shrink:0;}
+.conn-info{flex:1;}
+.conn-name{font-size:13px;font-weight:600;color:var(--text);}
+.conn-role{font-size:11px;color:var(--text2);}
+.conn-deg{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;flex-shrink:0;}
+.deg-1{background:var(--green-dim);color:var(--green);}
+.deg-2{background:var(--blue-dim);color:var(--blue);}
+/* Clickable rows */
+tbody tr{cursor:pointer;}
+.jc-details-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);font-size:11px;padding:5px 9px;cursor:pointer;transition:var(--transition);font-family:inherit;}
+.jc-details-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim);}
+@media(max-width:767px){
+  .jc-facts{grid-template-columns:repeat(2,1fr);}
+}
 </style>
 </head>
 <body>
@@ -496,7 +530,7 @@ tr:hover td{background:var(--surface2);}
             <th data-i18n="th_cv">CV</th>
           </tr></thead>
           <tbody>
-            <tr>
+            <tr data-job="mekorot">
               <td class="col-title"><div class="job-title">Senior PMO Manager — Infrastructure</div><div class="company">Mekorot Water Authority</div></td>
               <td><span class="source-badge src-gov">🏛 Gov</span></td>
               <td style="color:var(--text2)">2h ago</td>
@@ -507,7 +541,7 @@ tr:hover td{background:var(--surface2);}
               <td><button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply">✨ Apply</button></td>
               <td style="color:var(--primary);font-size:12px" data-i18n="cv_ready">📄 Ready</td>
             </tr>
-            <tr>
+            <tr data-job="hot">
               <td class="col-title"><div class="job-title">Project Manager — Digital Transformation</div><div class="company">HOT Mobile</div></td>
               <td><span class="source-badge src-linkedin">💼 LinkedIn</span></td>
               <td style="color:var(--text2)">5h ago</td>
@@ -518,7 +552,7 @@ tr:hover td{background:var(--surface2);}
               <td><button class="magic-btn magic-btn-sent" data-i18n="btn_applied">✓ Applied</button></td>
               <td style="color:var(--primary);font-size:12px" data-i18n="cv_sent">📄 Sent</td>
             </tr>
-            <tr>
+            <tr data-job="hapoalim">
               <td class="col-title"><div class="job-title">Agile Program Manager — Fintech</div><div class="company">Bank Hapoalim Digital</div></td>
               <td><span class="source-badge src-linkedin">💼 LinkedIn</span></td>
               <td style="color:var(--text2)">1d ago</td>
@@ -529,7 +563,7 @@ tr:hover td{background:var(--surface2);}
               <td><button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply">✨ Apply</button></td>
               <td style="color:var(--text2);font-size:12px" data-i18n="cv_generating">Generating...</td>
             </tr>
-            <tr>
+            <tr data-job="iec">
               <td class="col-title"><div class="job-title">Infrastructure Project Lead — Energy</div><div class="company">Israel Electric Corporation</div></td>
               <td><span class="source-badge src-gov">🏛 Noga</span></td>
               <td style="color:var(--text2)">1d ago</td>
@@ -540,7 +574,7 @@ tr:hover td{background:var(--surface2);}
               <td><button class="magic-btn magic-btn-sent" data-i18n="btn_auto_applied">🤖 Auto-Applied</button></td>
               <td style="color:var(--primary);font-size:12px" data-i18n="cv_sent">📄 Sent</td>
             </tr>
-            <tr>
+            <tr data-job="danya">
               <td class="col-title"><div class="job-title">PMO Director — Construction</div><div class="company">Danya Cebus</div></td>
               <td><span class="source-badge src-indeed">🔎 Indeed</span></td>
               <td style="color:var(--text2)">2d ago</td>
@@ -551,7 +585,7 @@ tr:hover td{background:var(--surface2);}
               <td><button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply">✨ Apply</button></td>
               <td style="color:var(--text3)">—</td>
             </tr>
-            <tr>
+            <tr data-job="amdocs">
               <td class="col-title"><div class="job-title">Scrum Master / Agile Coach</div><div class="company">Amdocs</div></td>
               <td><span class="source-badge src-telegram">✈️ Telegram</span></td>
               <td style="color:var(--text2)">3d ago</td>
@@ -562,7 +596,7 @@ tr:hover td{background:var(--surface2);}
               <td><button class="magic-btn magic-btn-low" disabled data-i18n="btn_low_match">Low Match</button></td>
               <td style="color:var(--text3)">—</td>
             </tr>
-            <tr>
+            <tr data-job="shippers">
               <td class="col-title"><div class="job-title">VP Operations — Logistics</div><div class="company">Shippers Group</div></td>
               <td><span class="source-badge src-facebook">👥 Facebook</span></td>
               <td style="color:var(--text2)">3d ago</td>
@@ -591,6 +625,7 @@ tr:hover td{background:var(--surface2);}
             <span style="font-size:11px;color:var(--text3)">2h ago</span>
           </div>
           <div class="job-card-actions">
+            <button class="jc-details-btn" onclick="openJobCard('mekorot')">ℹ️ Details</button>
             <button class="reasoning-btn" onclick="openReasoning('mekorot')" data-i18n="btn_strategy">🧠 Strategy</button>
             <button class="magic-btn magic-btn-ready" onclick="openMagic()" data-i18n="btn_apply_now">✨ Apply Now</button>
           </div>
@@ -866,6 +901,11 @@ tr:hover td{background:var(--surface2);}
   </div>
 </div>
 
+<!-- ══════ JOB CARD MODAL ══════ -->
+<div class="overlay" id="overlay-jobcard" onclick="if(event.target===this)closeJobCard()">
+  <div class="modal modal-xl" id="jobcard-modal" style="position:relative;padding:20px;"></div>
+</div>
+
 <div class="proto-label" data-i18n="proto_label">🎨 Prototype v3 · Avatar → Theme &amp; Brightness · ☰ for mobile menu</div>
 
 <script>
@@ -1027,6 +1067,226 @@ function toggleLang() {
   // To add more languages extend this cycle: 'en' → 'he' → 'fr' → 'en'
   setLocale(currentLocale === 'en' ? 'he' : 'en');
 }
+
+// ══════════════════════════════════════════════════════
+// JOB DATA — full detail per job
+// ══════════════════════════════════════════════════════
+const JOBS = {
+  mekorot: {
+    title:'Senior PMO Manager — Infrastructure', company:'Mekorot Water Authority', logo:'💧',
+    source:'🏛 Gov', srcClass:'src-gov', posted:'2h ago',
+    match:95, matchClass:'score-high', location:'Tel Aviv',
+    remote:'Hybrid · 1 day/week', department:'Infrastructure Projects Division',
+    companySize:'1,000–5,000', glassdoor:3.8, industry:'Water & Utilities',
+    salaryPosted:null,
+    salaryMarket:{p25:22000,p50:28000,p75:35000,p90:42000,est:32000,cur:'₪'},
+    connections:[
+      {initials:'AC',name:'Avi Cohen',role:'Project Manager',degree:1,mutual:null,canRefer:true},
+      {initials:'ML',name:'Maya Levi',role:'PMO Director',degree:2,mutual:3},
+      {initials:'RS',name:'Ron Shapira',role:'Infrastructure Lead',degree:2,mutual:1},
+    ],
+    pros:['12yr infrastructure exp.','Mekorot history','PMP Certified'],
+    cons:['No SAP','No water-tech'],
+    reasoning:'mekorot', applyEnabled:true,
+  },
+  hot: {
+    title:'Project Manager — Digital Transformation', company:'HOT Mobile', logo:'📡',
+    source:'💼 LinkedIn', srcClass:'src-linkedin', posted:'5h ago',
+    match:88, matchClass:'score-high', location:'Holon',
+    remote:'Hybrid · 2 days/week', department:'Digital Innovation',
+    companySize:'5,000–10,000', glassdoor:3.5, industry:'Telecommunications',
+    salaryPosted:{min:28000,max:35000,cur:'₪'},
+    salaryMarket:{p25:24000,p50:30000,p75:38000,p90:46000,est:31500,cur:'₪'},
+    connections:[
+      {initials:'YK',name:'Yael Katz',role:'Digital PM',degree:1,mutual:null,canRefer:true},
+      {initials:'TB',name:'Tal Ben-David',role:'VP Digital',degree:2,mutual:2},
+    ],
+    pros:['Digital PM exp.','Telecom background','Agile certified'],
+    cons:['No mobile-specific exp.'],
+    reasoning:'hot', applyEnabled:false, appliedLabel:'✓ Applied',
+  },
+  hapoalim: {
+    title:'Agile Program Manager — Fintech', company:'Bank Hapoalim Digital', logo:'🏦',
+    source:'💼 LinkedIn', srcClass:'src-linkedin', posted:'1d ago',
+    match:82, matchClass:'score-mid', location:'Tel Aviv',
+    remote:'Hybrid · 3 days/week', department:'Digital Banking Division',
+    companySize:'10,000+', glassdoor:3.6, industry:'Banking & Fintech',
+    salaryPosted:null,
+    salaryMarket:{p25:26000,p50:33000,p75:40000,p90:50000,est:35000,cur:'₪'},
+    connections:[
+      {initials:'NG',name:'Nir Goldberg',role:'Scrum Master',degree:2,mutual:4},
+    ],
+    pros:['Agile certified','Program mgmt exp.','Enterprise scale'],
+    cons:['No banking exp.','No fintech specific'],
+    reasoning:'hapoalim', applyEnabled:true,
+  },
+  iec: {
+    title:'Infrastructure Project Lead — Energy', company:'Israel Electric Corporation', logo:'⚡',
+    source:'🏛 Noga', srcClass:'src-gov', posted:'1d ago',
+    match:94, matchClass:'score-high', location:'Haifa',
+    remote:'On-site', department:'National Grid Infrastructure',
+    companySize:'10,000+', glassdoor:3.9, industry:'Energy & Utilities',
+    salaryPosted:null,
+    salaryMarket:{p25:24000,p50:30000,p75:38000,p90:46000,est:32000,cur:'₪'},
+    connections:[
+      {initials:'DM',name:'Doron Mizrahi',role:'Project Engineer',degree:2,mutual:2},
+    ],
+    pros:['Infrastructure expertise','Gov sector exp.','Large-scale projects'],
+    cons:['No energy-specific exp.'],
+    reasoning:null, applyEnabled:false, appliedLabel:'🤖 Auto-Applied',
+  },
+  danya: {
+    title:'PMO Director — Construction', company:'Danya Cebus', logo:'🏗',
+    source:'🔎 Indeed', srcClass:'src-indeed', posted:'2d ago',
+    match:71, matchClass:'score-mid', location:'Petah Tikva',
+    remote:'On-site', department:'PMO',
+    companySize:'1,000–5,000', glassdoor:3.2, industry:'Construction & Real Estate',
+    salaryPosted:{min:30000,max:40000,cur:'₪'},
+    salaryMarket:{p25:28000,p50:35000,p75:43000,p90:52000,est:35000,cur:'₪'},
+    connections:[],
+    pros:['PMO leadership','Large project mgmt'],
+    cons:['No construction exp.','No civil eng. background'],
+    reasoning:null, applyEnabled:true,
+  },
+  amdocs: {
+    title:'Scrum Master / Agile Coach', company:'Amdocs', logo:'💻',
+    source:'✈️ Telegram', srcClass:'src-telegram', posted:'3d ago',
+    match:55, matchClass:'score-low', location:"Ra'anana",
+    remote:'Hybrid · 2 days/week', department:'Engineering Excellence',
+    companySize:'25,000+', glassdoor:3.7, industry:'Technology & Software',
+    salaryPosted:null,
+    salaryMarket:{p25:18000,p50:23000,p75:28000,p90:34000,est:22000,cur:'₪'},
+    connections:[
+      {initials:'SP',name:'Shira Peled',role:'Agile Coach',degree:2,mutual:1},
+    ],
+    pros:['Agile knowledge'],
+    cons:['Not primary seniority','Low match','Below target level'],
+    reasoning:null, applyEnabled:false, appliedLabel:'Low Match',
+  },
+  shippers: {
+    title:'VP Operations — Logistics', company:'Shippers Group', logo:'🚚',
+    source:'👥 Facebook', srcClass:'src-facebook', posted:'3d ago',
+    match:79, matchClass:'score-mid', location:'Ashdod',
+    remote:'On-site', department:'Operations',
+    companySize:'500–1,000', glassdoor:3.4, industry:'Logistics & Supply Chain',
+    salaryPosted:{min:35000,max:50000,cur:'₪'},
+    salaryMarket:{p25:30000,p50:38000,p75:47000,p90:58000,est:42000,cur:'₪'},
+    connections:[],
+    pros:['Operations leadership','Large team mgmt'],
+    cons:['No logistics exp.','No supply chain background'],
+    reasoning:null, applyEnabled:true,
+  },
+};
+
+// ── Job Card modal ──
+function openJobCard(id) {
+  const job = JOBS[id];
+  if (!job) return;
+  document.getElementById('jobcard-modal').innerHTML = buildJobCard(job);
+  document.getElementById('overlay-jobcard').classList.add('open');
+}
+function closeJobCard() {
+  document.getElementById('overlay-jobcard').classList.remove('open');
+}
+
+function buildJobCard(job) {
+  const sm = job.salaryMarket;
+  const K = n => `${sm.cur}${Math.round(n/1000)}K`;
+  const range = sm.p90 - sm.p25;
+  const estPct = Math.min(97, Math.max(3, ((sm.est - sm.p25) / range) * 100)).toFixed(1);
+  const p50Pct = (((sm.p50 - sm.p25) / range) * 100).toFixed(1);
+  const p75Pct = (((sm.p75 - sm.p25) / range) * 100).toFixed(1);
+
+  const salPosted = job.salaryPosted
+    ? `<div style="font-size:12px;color:var(--text2);margin-bottom:6px">Posted: <strong style="color:var(--text)">${K(job.salaryPosted.min)} – ${K(job.salaryPosted.max)}</strong></div>`
+    : `<div style="font-size:12px;color:var(--text3);margin-bottom:6px">Salary not posted</div>`;
+
+  const stars = n => '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+
+  const network = job.connections.length === 0
+    ? `<div style="color:var(--text3);font-size:12px;padding:6px 0">No LinkedIn connections found at this company</div>`
+    : job.connections.map(c => `
+      <div class="conn-item">
+        <div class="conn-avatar">${c.initials}</div>
+        <div class="conn-info">
+          <div class="conn-name">${c.name}${c.canRefer ? ' <span style="font-size:10px;color:var(--green)">· Can refer ✓</span>' : ''}</div>
+          <div class="conn-role">${c.role}${c.mutual ? ` · ${c.mutual} mutual connections` : ''}</div>
+        </div>
+        <span class="conn-deg deg-${c.degree}">${c.degree}${c.degree===1?'st':'nd'}</span>
+      </div>`).join('');
+
+  let actions = `<button class="btn btn-ghost" onclick="closeJobCard()">Close</button>`;
+  if (job.reasoning) actions += `<button class="btn btn-ghost" onclick="closeJobCard();openReasoning('${job.reasoning}')">🧠 Full Strategy</button>`;
+  if (job.applyEnabled) actions += `<button class="btn btn-green" onclick="closeJobCard();openMagic()">✨ Apply</button>`;
+  else if (job.appliedLabel) actions += `<button class="btn" style="background:var(--green-dim);color:var(--green);cursor:default" disabled>${job.appliedLabel}</button>`;
+
+  return `
+    <div class="modal-header" style="margin-bottom:14px">
+      <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0">
+        <div class="jc-logo">${job.logo}</div>
+        <div style="flex:1;min-width:0">
+          <div class="jc-title">${job.title}</div>
+          <div class="jc-meta">
+            <strong>${job.company}</strong>
+            <span class="source-badge ${job.srcClass}">${job.source}</span>
+            <span style="color:var(--text3)">${job.posted}</span>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;margin-right:36px">
+          <div class="score-num ${job.matchClass}" style="font-size:28px;line-height:1">${job.match}%</div>
+          <div style="font-size:10px;color:var(--text3)">AI Match</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeJobCard()" style="position:absolute;top:20px;right:20px">✕</button>
+    </div>
+
+    <div class="jc-facts">
+      <div class="jc-fact"><div class="jc-fact-icon">📍</div><div class="jc-fact-label">Location</div><div class="jc-fact-val">${job.location}</div></div>
+      <div class="jc-fact"><div class="jc-fact-icon">🏠</div><div class="jc-fact-label">Remote Policy</div><div class="jc-fact-val">${job.remote}</div></div>
+      <div class="jc-fact"><div class="jc-fact-icon">🏢</div><div class="jc-fact-label">Department</div><div class="jc-fact-val" title="${job.department}">${job.department}</div></div>
+      <div class="jc-fact"><div class="jc-fact-icon">👥</div><div class="jc-fact-label">Company Size</div><div class="jc-fact-val">${job.companySize} employees</div></div>
+      <div class="jc-fact"><div class="jc-fact-icon">🏭</div><div class="jc-fact-label">Industry</div><div class="jc-fact-val">${job.industry}</div></div>
+      <div class="jc-fact"><div class="jc-fact-icon">⭐</div><div class="jc-fact-label">Glassdoor</div><div class="jc-fact-val">${job.glassdoor} <span style="color:var(--yellow);font-size:11px">${stars(job.glassdoor)}</span></div></div>
+    </div>
+
+    <div class="jc-section">
+      <div class="jc-section-title">💰 Compensation</div>
+      ${salPosted}
+      <div style="font-size:11px;color:var(--text3);margin-bottom:6px">Market range · ${job.industry} · Israel (₪/month)</div>
+      <div class="sal-bar-wrap">
+        <div class="sal-bar-gradient"></div>
+        <div class="sal-marker" style="left:${estPct}%" title="Estimated target: ${K(sm.est)}"></div>
+        <div style="position:absolute;top:-1px;left:${p50Pct}%;width:1px;height:12px;background:rgba(255,255,255,0.5)"></div>
+        <div style="position:absolute;top:-1px;left:${p75Pct}%;width:1px;height:12px;background:rgba(255,255,255,0.5)"></div>
+      </div>
+      <div class="sal-labels"><span>P25 · ${K(sm.p25)}</span><span>P50 · ${K(sm.p50)}</span><span>P75 · ${K(sm.p75)}</span><span>P90 · ${K(sm.p90)}</span></div>
+      <div style="font-size:12px;color:var(--primary);font-weight:600;margin-top:8px">● Estimated target salary: ~${K(sm.est)} / month</div>
+    </div>
+
+    <div class="jc-section">
+      <div class="jc-section-title">👥 Your Network at ${job.company} <span style="color:var(--blue);font-weight:400;text-transform:none;font-size:10px">via LinkedIn</span></div>
+      ${network}
+    </div>
+
+    <div class="jc-section">
+      <div class="jc-section-title">🤖 AI Match Breakdown · ${job.match}%</div>
+      <div class="match-pills">
+        ${job.pros.map(p=>`<span class="match-pill mp-match">✓ ${p}</span>`).join('')}
+        ${job.cons.map(c=>`<span class="match-pill mp-gap">✗ ${c}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="action-row">${actions}</div>`;
+}
+
+// ── Event delegation: table row → job card ──
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.table-wrap table').addEventListener('click', e => {
+    if (e.target.closest('button')) return; // buttons handle themselves
+    const row = e.target.closest('tr[data-job]');
+    if (row) openJobCard(row.dataset.job);
+  });
+});
 
 // ── Navigation ──
 function showScreen(id, btn) {
