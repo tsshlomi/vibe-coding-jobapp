@@ -432,6 +432,32 @@ tr:hover td{background:var(--surface2);}
 .gap-wrap.open .gap-popover{display:block;}
 /* Clickable rows */
 tbody tr{cursor:pointer;}
+/* ═══════ BULK SELECTION ═══════ */
+.col-check{width:38px;text-align:center;padding:10px 6px !important;cursor:default;}
+.col-check input[type="checkbox"]{width:15px;height:15px;cursor:pointer;accent-color:var(--primary);vertical-align:middle;}
+tr.row-selected td{background:var(--primary-dim) !important;transition:background 0.15s;}
+tr.row-selected:hover td{filter:brightness(0.97);}
+/* Bulk action bar */
+.bulk-bar{display:none;align-items:center;padding:9px 20px;gap:10px;background:var(--primary-dim);border-bottom:2px solid var(--primary);flex-shrink:0;animation:slideDown 0.15s ease-out;}
+.bulk-bar.open{display:flex;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.bulk-count{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;min-width:90px;}
+.bulk-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.bulk-btn{padding:6px 13px;border-radius:var(--radius-sm);border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--transition);}
+.bulk-btn-apply{background:var(--primary);color:var(--primary-text);}
+.bulk-btn-apply:hover{filter:brightness(1.08);}
+.bulk-btn-archive{background:var(--surface);color:var(--text2);border:1px solid var(--border);}
+.bulk-btn-archive:hover{border-color:var(--text2);color:var(--text);}
+.bulk-btn-status{background:var(--surface);color:var(--text2);border:1px solid var(--border);}
+.bulk-btn-status:hover{border-color:var(--text2);color:var(--text);}
+.bulk-clear{margin-left:auto;background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer;line-height:1;padding:2px 4px;border-radius:4px;transition:var(--transition);}
+.bulk-clear:hover{color:var(--text);background:var(--surface3);}
+/* Status dropdown */
+.bulk-status-menu{display:none;position:absolute;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);z-index:50;min-width:140px;overflow:hidden;}
+.bulk-status-menu.open{display:block;}
+.bulk-status-opt{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--text2);transition:var(--transition);}
+.bulk-status-opt:hover{background:var(--surface2);color:var(--text);}
+.bulk-status-wrap{position:relative;}
 .jc-details-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);font-size:11px;padding:5px 9px;cursor:pointer;transition:var(--transition);font-family:inherit;}
 .jc-details-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim);}
 @media(max-width:767px){
@@ -558,10 +584,30 @@ tbody tr{cursor:pointer;}
         </div>
       </div>
 
+      <!-- BULK ACTION BAR (shown when rows are selected) -->
+      <div class="bulk-bar" id="bulk-bar">
+        <span class="bulk-count" id="bulk-count">0 selected</span>
+        <div class="bulk-actions">
+          <button class="bulk-btn bulk-btn-apply" onclick="bulkAction('apply')">✨ Apply All</button>
+          <button class="bulk-btn bulk-btn-archive" onclick="bulkAction('archive')">📁 Archive</button>
+          <div class="bulk-status-wrap">
+            <button class="bulk-btn bulk-btn-status" onclick="toggleBulkStatusMenu(this)">🔄 Change Status ▾</button>
+            <div class="bulk-status-menu" id="bulk-status-menu">
+              <div class="bulk-status-opt" onclick="bulkSetStatus('In Review')">In Review</div>
+              <div class="bulk-status-opt" onclick="bulkSetStatus('Pending')">Pending</div>
+              <div class="bulk-status-opt" onclick="bulkSetStatus('Sent')">Sent</div>
+              <div class="bulk-status-opt" onclick="bulkSetStatus('New')">New</div>
+            </div>
+          </div>
+        </div>
+        <button class="bulk-clear" onclick="clearSelection()" title="Clear selection">✕</button>
+      </div>
+
       <!-- DESKTOP TABLE -->
       <div class="table-wrap">
         <table>
           <thead><tr>
+            <th class="col-check"><input type="checkbox" id="select-all" title="Select all" onchange="toggleSelectAll(this)"></th>
             <th data-i18n="th_job_title">Job Title / Company</th>
             <th data-i18n="th_source">Source</th>
             <th data-i18n="th_posted">Posted</th>
@@ -574,6 +620,7 @@ tbody tr{cursor:pointer;}
           </tr></thead>
           <tbody>
             <tr data-job="mekorot">
+              <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
               <td class="col-title"><div class="job-title">Senior PMO Manager — Infrastructure</div><div class="company">Mekorot Water Authority</div></td>
               <td><span class="source-badge src-gov">🏛 Gov</span></td>
               <td style="color:var(--text2)">2h ago</td>
@@ -585,6 +632,7 @@ tbody tr{cursor:pointer;}
               <td style="color:var(--primary);font-size:12px" data-i18n="cv_ready">📄 Ready</td>
             </tr>
             <tr data-job="hot">
+              <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
               <td class="col-title"><div class="job-title">Project Manager — Digital Transformation</div><div class="company">HOT Mobile</div></td>
               <td><span class="source-badge src-linkedin">💼 LinkedIn</span></td>
               <td style="color:var(--text2)">5h ago</td>
@@ -596,6 +644,7 @@ tbody tr{cursor:pointer;}
               <td style="color:var(--primary);font-size:12px" data-i18n="cv_sent">📄 Sent</td>
             </tr>
             <tr data-job="hapoalim">
+              <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
               <td class="col-title"><div class="job-title">Agile Program Manager — Fintech</div><div class="company">Bank Hapoalim Digital</div></td>
               <td><span class="source-badge src-linkedin">💼 LinkedIn</span></td>
               <td style="color:var(--text2)">1d ago</td>
@@ -607,6 +656,7 @@ tbody tr{cursor:pointer;}
               <td style="color:var(--text2);font-size:12px" data-i18n="cv_generating">Generating...</td>
             </tr>
             <tr data-job="iec">
+              <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
               <td class="col-title"><div class="job-title">Infrastructure Project Lead — Energy</div><div class="company">Israel Electric Corporation</div></td>
               <td><span class="source-badge src-gov">🏛 Noga</span></td>
               <td style="color:var(--text2)">1d ago</td>
@@ -618,6 +668,7 @@ tbody tr{cursor:pointer;}
               <td style="color:var(--primary);font-size:12px" data-i18n="cv_sent">📄 Sent</td>
             </tr>
             <tr data-job="danya">
+              <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
               <td class="col-title"><div class="job-title">PMO Director — Construction</div><div class="company">Danya Cebus</div></td>
               <td><span class="source-badge src-indeed">🔎 Indeed</span></td>
               <td style="color:var(--text2)">2d ago</td>
@@ -629,6 +680,7 @@ tbody tr{cursor:pointer;}
               <td style="color:var(--text3)">—</td>
             </tr>
             <tr data-job="amdocs">
+              <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
               <td class="col-title"><div class="job-title">Scrum Master / Agile Coach</div><div class="company">Amdocs</div></td>
               <td><span class="source-badge src-telegram">✈️ Telegram</span></td>
               <td style="color:var(--text2)">3d ago</td>
@@ -640,6 +692,7 @@ tbody tr{cursor:pointer;}
               <td style="color:var(--text3)">—</td>
             </tr>
             <tr data-job="shippers">
+              <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
               <td class="col-title"><div class="job-title">VP Operations — Logistics</div><div class="company">Shippers Group</div></td>
               <td><span class="source-badge src-facebook">👥 Facebook</span></td>
               <td style="color:var(--text2)">3d ago</td>
@@ -1229,6 +1282,83 @@ const JOBS = {
 };
 
 // ══════════════════════════════════════════════════════
+// BULK SELECTION
+// ══════════════════════════════════════════════════════
+function getCheckedRows() {
+  return [...document.querySelectorAll('tbody tr[data-job]')].filter(r =>
+    r.style.display !== 'none' && r.querySelector('.row-check')?.checked
+  );
+}
+
+function updateBulkBar() {
+  const checked = getCheckedRows();
+  const n = checked.length;
+  const bar = document.getElementById('bulk-bar');
+  const cnt = document.getElementById('bulk-count');
+  // Sync select-all checkbox state
+  const allVisible = [...document.querySelectorAll('tbody tr[data-job]')]
+    .filter(r => r.style.display !== 'none');
+  const sa = document.getElementById('select-all');
+  if (sa) sa.indeterminate = n > 0 && n < allVisible.length;
+  if (sa) sa.checked = n > 0 && n === allVisible.length;
+  // Toggle selected class
+  document.querySelectorAll('tbody tr[data-job]').forEach(r => {
+    r.classList.toggle('row-selected', r.querySelector('.row-check')?.checked);
+  });
+  if (cnt) cnt.textContent = `${n} selected`;
+  bar?.classList.toggle('open', n > 0);
+  // Close status menu if bar closes
+  if (n === 0) document.getElementById('bulk-status-menu')?.classList.remove('open');
+}
+
+function toggleSelectAll(cb) {
+  const visible = [...document.querySelectorAll('tbody tr[data-job]')]
+    .filter(r => r.style.display !== 'none');
+  visible.forEach(r => {
+    const ck = r.querySelector('.row-check');
+    if (ck) ck.checked = cb.checked;
+  });
+  updateBulkBar();
+}
+
+function clearSelection() {
+  document.querySelectorAll('.row-check').forEach(c => c.checked = false);
+  const sa = document.getElementById('select-all');
+  if (sa) { sa.checked = false; sa.indeterminate = false; }
+  updateBulkBar();
+}
+
+function toggleBulkStatusMenu(btn) {
+  const menu = document.getElementById('bulk-status-menu');
+  menu?.classList.toggle('open');
+  // close on outside click
+  setTimeout(() => document.addEventListener('click', function h(e) {
+    if (!e.target.closest('.bulk-status-wrap')) {
+      menu?.classList.remove('open');
+      document.removeEventListener('click', h);
+    }
+  }), 0);
+}
+
+function bulkAction(type) {
+  const rows = getCheckedRows();
+  const names = rows.map(r => r.querySelector('.job-title')?.textContent).join(', ');
+  const msgs = {
+    apply:   `✨ Applying to ${rows.length} job(s):\n${names}`,
+    archive: `📁 Archiving ${rows.length} job(s):\n${names}`,
+  };
+  alert(msgs[type] || `Action on ${rows.length} job(s)`);
+  clearSelection();
+}
+
+function bulkSetStatus(status) {
+  const rows = getCheckedRows();
+  alert(`🔄 Setting status to "${status}" for ${rows.length} job(s)`);
+  document.getElementById('bulk-status-menu')?.classList.remove('open');
+  clearSelection();
+}
+
+// ══════════════════════════════════════════════════════
 // FILTERING — search input + source/match chips
 // ══════════════════════════════════════════════════════
 function filterChip(el) {
@@ -1257,11 +1387,13 @@ function filterTable() {
     if (filter === 'ge80'     && score < 80)                         show = false;
 
     row.style.display = show ? '' : 'none';
+    if (!show && row.querySelector('.row-check')) row.querySelector('.row-check').checked = false;
     if (show) visible++;
   });
 
   const el = document.getElementById('filter-count');
   if (el) el.innerHTML = `Showing <strong>${visible}</strong> of 47`;
+  updateBulkBar();
 }
 
 // ── User profile (mock) ──
@@ -1432,9 +1564,10 @@ function buildJobCard(job) {
 
 // ── Event delegation: table row → job card ──
 document.addEventListener('DOMContentLoaded', () => {
-  // Table row → job card
+  // Table row → job card (skip button and checkbox cells)
   document.querySelector('.table-wrap table').addEventListener('click', e => {
     if (e.target.closest('button')) return;
+    if (e.target.closest('.col-check')) return;
     const row = e.target.closest('tr[data-job]');
     if (row) openJobCard(row.dataset.job);
   });
