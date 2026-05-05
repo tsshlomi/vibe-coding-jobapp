@@ -537,7 +537,7 @@ tr.row-selected:hover td{filter:brightness(0.97);}
 .toast-close:hover{color:var(--text);}
 /* ═══════ WORKFLOW TASK DROPDOWN ═══════ */
 .task-wrap{position:relative;}
-.task-dropdown{display:none;position:absolute;bottom:calc(100% + 4px);left:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);z-index:50;min-width:180px;overflow:hidden;}
+.task-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);z-index:50;min-width:180px;overflow:hidden;}
 .task-dropdown.open{display:block;}
 .task-opt{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--text2);display:flex;align-items:center;gap:8px;transition:var(--transition);}
 .task-opt:hover{background:var(--surface2);color:var(--text);}
@@ -1854,6 +1854,42 @@ function filterTable() {
     }
   });
 
+  // Also filter mobile cards
+  document.querySelectorAll('#job-cards .job-card[data-job]').forEach(card => {
+    const title   = (card.querySelector('.job-card-title')?.textContent || '').toLowerCase();
+    const company = (card.querySelector('.job-card-company')?.textContent || '').toLowerCase();
+    const srcCls  = card.dataset.source || '';
+    const score   = parseInt(card.dataset.match) || 0;
+    let show = true;
+    if (query && !title.includes(query) && !company.includes(query)) show = false;
+    if (filter === 'linkedin' && srcCls !== 'src-linkedin') show = false;
+    if (filter === 'gov'      && srcCls !== 'src-gov')      show = false;
+    if (filter === 'ge80'     && score < 80)                show = false;
+    card._filterHidden = !show;
+    // Check mobile group collapse
+    const prevMobileHeader = [...document.querySelectorAll('#job-cards .mobile-group-header')].reverse()
+      .find(h => h.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const inMobileCollapsed = prevMobileHeader?.classList.contains('group-collapsed');
+    card.style.display = (show && !inMobileCollapsed) ? '' : 'none';
+    if (!show) { const ck = card.querySelector('.card-check'); if (ck) ck.checked = false; }
+  });
+  // Update mobile group header counts
+  document.querySelectorAll('#job-cards .mobile-group-header').forEach(header => {
+    let el = header.nextElementSibling;
+    let hasVisible = false;
+    while (el && !el.classList.contains('mobile-group-header')) {
+      if (!el._filterHidden) hasVisible = true;
+      el = el.nextElementSibling;
+    }
+    header.style.display = hasVisible ? '' : 'none';
+    const cnt = header.querySelector('.group-count');
+    if (cnt) {
+      let n = 0; let r = header.nextElementSibling;
+      while (r && !r.classList.contains('mobile-group-header')) { if (!r._filterHidden) n++; r = r.nextElementSibling; }
+      cnt.textContent = n;
+    }
+  });
+
   const el = document.getElementById('filter-count');
   if (el) el.innerHTML = `Showing <strong>${visible}</strong> of 47`;
   updateBulkBar();
@@ -1883,7 +1919,7 @@ const GAP_TIPS = {
 function openJobCard(id) {
   const job = JOBS[id];
   if (!job) return;
-  document.getElementById('jobcard-modal').innerHTML = buildJobCard(job);
+  document.getElementById('jobcard-modal').innerHTML = buildJobCard(job, id);
   document.getElementById('overlay-jobcard').classList.add('open');
   // close any open gap popovers on outside click
   document.getElementById('jobcard-modal').addEventListener('click', e => {
@@ -1902,7 +1938,7 @@ function toggleGapTip(el) {
   if (!wasOpen) wrap.classList.add('open');
 }
 
-function buildJobCard(job) {
+function buildJobCard(job, jobId) {
   const sm = job.salaryMarket;
   const K = n => `${sm.cur}${Math.round(n/1000)}K`;
   const range = sm.p90 - sm.p25;
@@ -1948,7 +1984,7 @@ function buildJobCard(job) {
       : `<span class="match-pill mp-gap">✗ ${c}</span>`;
   }).join('');
 
-  const taskDropdownId = `task-dd-${job.id || 'job'}`;
+  const taskDropdownId = `task-dd-${jobId || 'job'}`;
   let actions = `<button class="btn btn-ghost" onclick="closeJobCard()">Close</button>`;
   if (job.reasoning) actions += `<button class="btn btn-ghost" onclick="closeJobCard();openReasoning('${job.reasoning}')">🧠 Full Strategy</button>`;
   actions += `
