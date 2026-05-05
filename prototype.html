@@ -316,6 +316,35 @@ tr:hover td{background:var(--surface2);}
 .quota-bar{margin-top:8px;}
 .quota-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px;}
 
+/* ═══════ MAGIC BUTTON IMPROVEMENTS ═══════ */
+/* Active step: spinning ring instead of flat pulse */
+.step-active{background:var(--primary-dim);position:relative;animation:none;}
+.step-active::before{content:'';position:absolute;inset:-4px;border-radius:calc(var(--radius-sm) + 4px);border:2.5px solid transparent;border-top-color:var(--primary);border-right-color:var(--primary);animation:step-spin 0.65s linear infinite;}
+@keyframes step-spin{to{transform:rotate(360deg)}}
+/* Step-level is-active border */
+.magic-step{transition:border-color 0.2s,background 0.2s;}
+.magic-step.is-active{border-color:var(--primary);background:var(--surface);}
+/* Error states */
+.step-error{background:var(--orange-dim);}
+.step-blocked{background:var(--surface3);opacity:0.45;}
+.magic-step.is-error{border-color:var(--orange);}
+.magic-step.is-blocked{opacity:0.45;}
+/* Step status fade */
+.step-status{transition:color 0.2s,opacity 0.15s;}
+/* Error result panel */
+#magic-error-result{display:none;text-align:center;padding:16px;background:var(--orange-dim);border:1px solid var(--orange);border-radius:var(--radius-md);font-weight:700;font-size:14px;line-height:1.6;color:var(--orange);margin-top:4px;}
+/* ═══════ KEYBOARD FOCUS ═══════ */
+tr.kb-focus td{background:var(--primary-dim) !important;}
+tr.kb-focus td:first-child{border-left:3px solid var(--primary);}
+/* Shortcuts panel */
+.shortcuts-panel{display:none;position:fixed;bottom:52px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-md);z-index:201;min-width:300px;}
+.shortcuts-panel.open{display:block;}
+.sc-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);margin-bottom:10px;}
+.sc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;color:var(--text2);gap:24px;border-bottom:1px solid var(--border);}
+.sc-row:last-child{border-bottom:none;}
+.kbd{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:monospace;font-size:11px;color:var(--text2);margin:0 2px;}
+.shortcuts-trigger{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;font-size:11px;color:var(--text3);cursor:pointer;font-family:inherit;transition:var(--transition);}
+.shortcuts-trigger:hover{color:var(--text);border-color:var(--text3);}
 /* ═══════ SCROLLBAR ═══════ */
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -1007,23 +1036,41 @@ tr.row-selected:hover td{filter:brightness(0.97);}
 <!-- ══════ MAGIC BUTTON MODAL ══════ -->
 <div class="overlay" id="overlay-magic" onclick="if(event.target===this)closeMagic()">
   <div class="modal">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" data-i18n="magic_modal_title">✨ Magic Button — Executing</div>
-        <div class="modal-sub">Senior PMO Manager · Mekorot Water Authority</div>
+    <!-- ① Header: job context bold, "Magic Button" label small -->
+    <div class="modal-header" style="margin-bottom:12px">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);margin-bottom:4px" data-i18n="magic_modal_title">✨ Magic Button — Executing</div>
+        <div style="font-size:18px;font-weight:800;color:var(--text);line-height:1.3" id="magic-job-title">Senior PMO Manager — Infrastructure</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:3px" id="magic-job-company">Mekorot Water Authority · 95% match</div>
       </div>
-      <button class="modal-close" onclick="closeMagic()">✕</button>
+      <div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0">
+        <button onclick="openMagic('error')" style="font-size:10px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:4px;padding:3px 8px;cursor:pointer;font-family:inherit;white-space:nowrap">⚡ Error demo</button>
+        <button class="modal-close" onclick="closeMagic()">✕</button>
+      </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="magic-progress" style="width:0%"></div></div>
+    <!-- ② Each step has an id for is-active / is-error class toggling -->
     <div class="magic-steps">
-      <div class="magic-step"><div class="step-icon step-wait" id="step1-icon">📄</div><div class="step-info"><div class="step-name" data-i18n="step1_name">CV Tailoring</div><div class="step-detail" data-i18n="step1_detail">Generating JD-optimized PDF via Claude Sonnet</div></div><div class="step-status ss-wait" id="step1-status" data-i18n="step_waiting">Waiting</div></div>
-      <div class="magic-step"><div class="step-icon step-wait" id="step2-icon">🌐</div><div class="step-info"><div class="step-name" data-i18n="step2_name">Portal Login</div><div class="step-detail" data-i18n="step2_detail">Playwright → mekorot.co.il/careers</div></div><div class="step-status ss-wait" id="step2-status" data-i18n="step_waiting">Waiting</div></div>
-      <div class="magic-step"><div class="step-icon step-wait" id="step3-icon">📝</div><div class="step-info"><div class="step-name" data-i18n="step3_name">Form Fill</div><div class="step-detail" data-i18n="step3_detail">8 fields detected · Auto-populating from profile</div></div><div class="step-status ss-wait" id="step3-status" data-i18n="step_waiting">Waiting</div></div>
-      <div class="magic-step"><div class="step-icon step-wait" id="step4-icon">📤</div><div class="step-info"><div class="step-name" data-i18n="step4_name">Submit &amp; Log</div><div class="step-detail" data-i18n="step4_detail">Upload tailored CV + cover letter, audit trail</div></div><div class="step-status ss-wait" id="step4-status" data-i18n="step_waiting">Waiting</div></div>
+      <div class="magic-step" id="magic-step-1"><div class="step-icon step-wait" id="step1-icon">📄</div><div class="step-info"><div class="step-name" data-i18n="step1_name">CV Tailoring</div><div class="step-detail" data-i18n="step1_detail">Generating JD-optimized PDF via Claude Sonnet</div></div><div class="step-status ss-wait" id="step1-status" data-i18n="step_waiting">Waiting</div></div>
+      <div class="magic-step" id="magic-step-2"><div class="step-icon step-wait" id="step2-icon">🌐</div><div class="step-info"><div class="step-name" data-i18n="step2_name">Portal Login</div><div class="step-detail" data-i18n="step2_detail">Playwright → mekorot.co.il/careers</div></div><div class="step-status ss-wait" id="step2-status" data-i18n="step_waiting">Waiting</div></div>
+      <!-- ③ Step 3 detail updated live with field counter -->
+      <div class="magic-step" id="magic-step-3"><div class="step-icon step-wait" id="step3-icon">📝</div><div class="step-info"><div class="step-name" data-i18n="step3_name">Form Fill</div><div class="step-detail" id="step3-detail" data-i18n="step3_detail">8 fields detected · Auto-populating from profile</div></div><div class="step-status ss-wait" id="step3-status" data-i18n="step_waiting">Waiting</div></div>
+      <div class="magic-step" id="magic-step-4"><div class="step-icon step-wait" id="step4-icon">📤</div><div class="step-info"><div class="step-name" data-i18n="step4_name">Submit &amp; Log</div><div class="step-detail" data-i18n="step4_detail">Upload tailored CV + cover letter, audit trail</div></div><div class="step-status ss-wait" id="step4-status" data-i18n="step_waiting">Waiting</div></div>
     </div>
+    <!-- ⑤ Success: includes audit trail link -->
     <div id="magic-result">
       <span data-i18n="magic_success">✅ Application submitted!</span><br>
-      <span data-i18n="magic_success_sub" style="font-weight:400;font-size:12px">Status → "Sent" · Audit trail saved</span>
+      <span data-i18n="magic_success_sub" style="font-weight:400;font-size:12px">Status → "Sent" · Audit trail saved</span><br>
+      <a href="#" onclick="return false" style="font-size:12px;color:var(--primary);font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:6px">📋 View audit log →</a>
+    </div>
+    <!-- ④ Error result panel -->
+    <div id="magic-error-result">
+      <div>❌ Step failed — Portal Login</div>
+      <div style="font-size:12px;font-weight:400;color:var(--text2);margin-top:3px">mekorot.co.il/careers blocked automated access</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+        <button class="btn btn-ghost" onclick="openMagic('success')" style="font-size:12px;padding:6px 14px">↩ Retry</button>
+        <button class="btn btn-ghost" onclick="closeMagic()" style="font-size:12px;padding:6px 14px">✋ Apply Manually</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1033,7 +1080,18 @@ tr.row-selected:hover td{filter:brightness(0.97);}
   <div class="modal modal-xl" id="jobcard-modal" style="position:relative;padding:20px;"></div>
 </div>
 
-<div class="proto-label" data-i18n="proto_label">🎨 Prototype v3 · Avatar → Theme &amp; Brightness · ☰ for mobile menu</div>
+<!-- Keyboard shortcuts panel -->
+<div class="shortcuts-panel" id="shortcuts-panel">
+  <div class="sc-title">Keyboard Shortcuts</div>
+  <div class="sc-row"><span>Focus search</span><span><kbd class="kbd">/</kbd></span></div>
+  <div class="sc-row"><span>Navigate rows</span><span><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd></span></div>
+  <div class="sc-row"><span>Open job card</span><span><kbd class="kbd">Enter</kbd></span></div>
+  <div class="sc-row"><span>Select row (bulk)</span><span><kbd class="kbd">Space</kbd></span></div>
+  <div class="sc-row"><span>Apply (Magic Button)</span><span><kbd class="kbd">A</kbd></span></div>
+  <div class="sc-row"><span>Close modal / clear</span><span><kbd class="kbd">Esc</kbd></span></div>
+  <div class="sc-row"><span>Show shortcuts</span><span><kbd class="kbd">?</kbd></span></div>
+</div>
+<div class="proto-label" data-i18n="proto_label">🎨 Prototype v3 · Avatar → Theme &amp; Brightness · ☰ for mobile menu · <button class="shortcuts-trigger" onclick="toggleShortcuts()">⌨ ?</button></div>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -1829,40 +1887,183 @@ function openReasoning(job) {
 function closeReasoning() { document.getElementById('overlay-reasoning').classList.remove('open'); }
 
 // ── Magic button modal ──
-function openMagic() {
+let _fieldTimer = null;
+
+function openMagic(scenario) {
+  scenario = scenario || 'success';
   document.getElementById('overlay-magic').classList.add('open');
   document.getElementById('magic-result').style.display = 'none';
+  document.getElementById('magic-error-result').style.display = 'none';
   resetSteps();
+
+  if (scenario === 'error') {
+    // ④ Error scenario: step 1 succeeds, step 2 fails
+    const onActive = (n) => {
+      document.getElementById('step'+n+'-icon').className = 'step-icon step-active';
+      document.getElementById('step'+n+'-status').textContent = [t('step1_running'),t('step2_running')][n-1];
+      document.getElementById('step'+n+'-status').className = 'step-status ss-running';
+      document.getElementById('magic-step-'+n).classList.add('is-active');
+    };
+    const onDone = (n) => {
+      document.getElementById('step'+n+'-icon').className = 'step-icon step-done';
+      document.getElementById('step'+n+'-status').textContent = [t('step1_done')][n-1];
+      document.getElementById('step'+n+'-status').className = 'step-status ss-done';
+      document.getElementById('magic-step-'+n).classList.remove('is-active');
+      document.getElementById('magic-progress').style.width = '25%';
+    };
+    setTimeout(() => onActive(1), 300);
+    setTimeout(() => onDone(1), 1200);
+    setTimeout(() => onActive(2), 1400);
+    setTimeout(() => {
+      document.getElementById('step2-icon').className = 'step-icon step-error';
+      document.getElementById('step2-icon').textContent = '❌';
+      document.getElementById('step2-status').textContent = 'Login failed';
+      document.getElementById('step2-status').className = 'step-status' ;
+      document.getElementById('step2-status').style.color = 'var(--orange)';
+      document.getElementById('magic-step-2').classList.remove('is-active');
+      document.getElementById('magic-step-2').classList.add('is-error');
+      // Block remaining steps
+      [3,4].forEach(n => {
+        document.getElementById('step'+n+'-icon').className = 'step-icon step-blocked';
+        document.getElementById('magic-step-'+n).classList.add('is-blocked');
+      });
+      setTimeout(() => { document.getElementById('magic-error-result').style.display = 'block'; }, 400);
+    }, 2600);
+    return;
+  }
+
+  // ✅ Success scenario
   const steps = [
-    { delay:400,  done:1400, icon:'step1-icon', status:'step1-status', run:t('step1_running'), doneText:t('step1_done') },
-    { delay:1600, done:2600, icon:'step2-icon', status:'step2-status', run:t('step2_running'), doneText:t('step2_done') },
-    { delay:2800, done:3800, icon:'step3-icon', status:'step3-status', run:t('step3_running'), doneText:t('step3_done') },
-    { delay:4000, done:5000, icon:'step4-icon', status:'step4-status', run:t('step4_running'), doneText:t('step4_done') },
+    { delay:300,  done:1200, n:1, run:t('step1_running'), doneText:t('step1_done') },
+    { delay:1350, done:2300, n:2, run:t('step2_running'), doneText:t('step2_done') },
+    { delay:2450, done:3700, n:3, run:t('step3_running'), doneText:t('step3_done') },
+    { delay:3850, done:4900, n:4, run:t('step4_running'), doneText:t('step4_done') },
   ];
+
   steps.forEach((s, i) => {
     setTimeout(() => {
-      document.getElementById(s.icon).className = 'step-icon step-active';
-      document.getElementById(s.status).textContent = s.run;
-      document.getElementById(s.status).className = 'step-status ss-running';
+      document.getElementById('step'+s.n+'-icon').className = 'step-icon step-active';
+      document.getElementById('step'+s.n+'-status').textContent = s.run;
+      document.getElementById('step'+s.n+'-status').className = 'step-status ss-running';
+      document.getElementById('magic-step-'+s.n).classList.add('is-active');
+
+      // ③ Live field counter for step 3
+      if (s.n === 3) {
+        let fc = 0;
+        _fieldTimer = setInterval(() => {
+          fc++;
+          const el = document.getElementById('step3-status');
+          if (el && fc < 8) el.textContent = `Filling (${fc}/8)...`;
+          if (fc >= 8) { clearInterval(_fieldTimer); _fieldTimer = null; }
+        }, 140);
+      }
     }, s.delay);
+
     setTimeout(() => {
-      document.getElementById(s.icon).className = 'step-icon step-done';
-      document.getElementById(s.status).textContent = s.doneText;
-      document.getElementById(s.status).className = 'step-status ss-done';
+      clearInterval(_fieldTimer); _fieldTimer = null;
+      document.getElementById('step'+s.n+'-icon').className = 'step-icon step-done';
+      document.getElementById('step'+s.n+'-status').textContent = s.doneText;
+      document.getElementById('step'+s.n+'-status').className = 'step-status ss-done';
+      document.getElementById('magic-step-'+s.n).classList.remove('is-active');
       document.getElementById('magic-progress').style.width = ((i+1)*25)+'%';
-      if (i === steps.length-1) setTimeout(() => { document.getElementById('magic-result').style.display = 'block'; }, 300);
+      if (i === steps.length - 1) setTimeout(() => { document.getElementById('magic-result').style.display = 'block'; }, 300);
     }, s.done);
   });
 }
+
 function closeMagic() { document.getElementById('overlay-magic').classList.remove('open'); resetSteps(); }
+
 function resetSteps() {
+  clearInterval(_fieldTimer); _fieldTimer = null;
   document.getElementById('magic-progress').style.width = '0%';
+  document.getElementById('magic-result').style.display = 'none';
+  document.getElementById('magic-error-result').style.display = 'none';
   [1,2,3,4].forEach(i => {
-    document.getElementById('step'+i+'-icon').className = 'step-icon step-wait';
-    document.getElementById('step'+i+'-status').textContent = t('step_waiting');
-    document.getElementById('step'+i+'-status').className = 'step-status ss-wait';
+    const icon = document.getElementById('step'+i+'-icon');
+    const status = document.getElementById('step'+i+'-status');
+    const step = document.getElementById('magic-step-'+i);
+    if (icon) { icon.className = 'step-icon step-wait'; icon.textContent = ['📄','🌐','📝','📤'][i-1]; }
+    if (status) { status.textContent = t('step_waiting'); status.className = 'step-status ss-wait'; status.style.color = ''; }
+    if (step) step.className = 'magic-step';
   });
+  const d3 = document.getElementById('step3-detail');
+  if (d3) d3.textContent = t('step3_detail');
 }
+
+// ══════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ══════════════════════════════════════════════════════
+let kbFocusIndex = -1;
+
+function navigateRow(dir) {
+  const rows = [...document.querySelectorAll('tbody tr[data-job]')]
+    .filter(r => r.style.display !== 'none' && !r.classList.contains('group-header'));
+  if (!rows.length) return;
+  document.querySelectorAll('tr.kb-focus').forEach(r => r.classList.remove('kb-focus'));
+  kbFocusIndex = Math.max(0, Math.min(rows.length - 1, kbFocusIndex + dir));
+  rows[kbFocusIndex].classList.add('kb-focus');
+  rows[kbFocusIndex].scrollIntoView({ block: 'nearest' });
+}
+
+function getFocusedRow() {
+  return document.querySelector('tr.kb-focus[data-job]');
+}
+
+function toggleShortcuts() {
+  document.getElementById('shortcuts-panel')?.classList.toggle('open');
+}
+
+document.addEventListener('keydown', e => {
+  // Skip if any overlay is open (except Escape)
+  const anyModal = [...document.querySelectorAll('.overlay')].some(o => o.classList.contains('open'));
+
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.overlay.open').forEach(o => o.classList.remove('open'));
+    document.getElementById('shortcuts-panel')?.classList.remove('open');
+    document.querySelectorAll('.groupby-menu.open,.bulk-status-menu.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('tr.kb-focus').forEach(r => r.classList.remove('kb-focus'));
+    kbFocusIndex = -1;
+    return;
+  }
+  if (anyModal) return;
+  if (e.target.matches('input,textarea,select')) {
+    return; // let the input handle its own keys
+  }
+
+  switch (e.key) {
+    case '/':
+      e.preventDefault();
+      document.getElementById('search-input')?.focus();
+      break;
+    case '?':
+      toggleShortcuts();
+      break;
+    case 'ArrowDown':
+      e.preventDefault();
+      navigateRow(kbFocusIndex < 0 ? 0 : 1);
+      break;
+    case 'ArrowUp':
+      e.preventDefault();
+      navigateRow(-1);
+      break;
+    case 'Enter': {
+      const row = getFocusedRow();
+      if (row) openJobCard(row.dataset.job);
+      break;
+    }
+    case ' ': {
+      e.preventDefault();
+      const row = getFocusedRow();
+      if (row) { const cb = row.querySelector('.row-check'); if (cb) { cb.checked = !cb.checked; updateBulkBar(); } }
+      break;
+    }
+    case 'a':
+    case 'A': {
+      if (getFocusedRow()) openMagic('success');
+      break;
+    }
+  }
+});
 
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => setLocale(currentLocale));
