@@ -176,16 +176,19 @@ body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);co
 .table-wrap{flex:1;overflow:auto;background:var(--bg);transition:var(--transition);}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 th{position:sticky;top:0;background:var(--surface2);color:var(--text3);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;z-index:1;transition:var(--transition);}
-td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;background:var(--surface);transition:background 0.3s ease-in-out;}
+/* ① Row spacing: 14px vertical for easier scanning */
+td{padding:14px 14px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;background:var(--surface);transition:background 0.3s ease-in-out;}
 tr:hover td{background:var(--surface2);}
 .col-title{min-width:190px;max-width:230px;white-space:normal;}
-.job-title{font-weight:600;color:var(--text);font-size:13px;line-height:1.4;}
+/* ② Typography: bolder job title as visual anchor */
+.job-title{font-weight:700;color:var(--text);font-size:13px;line-height:1.4;}
 .company{color:var(--text2);font-size:12px;margin-top:2px;}
 
-.score-wrap{display:flex;align-items:center;gap:8px;}
-.score-bar-bg{width:48px;height:5px;background:var(--surface3);border-radius:3px;}
-.score-bar-fill{height:5px;border-radius:3px;transition:var(--transition);}
-.score-num{font-weight:700;font-size:13px;}
+/* ⑤ Match column: number dominant, bar secondary */
+.score-wrap{display:flex;align-items:center;gap:6px;}
+.score-bar-bg{width:32px;height:4px;background:var(--surface3);border-radius:3px;}
+.score-bar-fill{height:4px;border-radius:3px;transition:var(--transition);}
+.score-num{font-weight:800;font-size:15px;}
 .score-high{color:var(--green);}
 .score-mid{color:var(--yellow);}
 .score-low{color:var(--orange);}
@@ -197,22 +200,26 @@ tr:hover td{background:var(--surface2);}
 .src-indeed{background:var(--purple-dim);color:var(--purple);}
 .src-facebook{background:var(--surface2);color:var(--text2);}
 
+/* ① Visual noise: mute passive status badges; keep orange for errors */
 .status-badge{padding:4px 9px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;transition:var(--transition);}
 .s-new{background:var(--surface2);color:var(--text2);}
-.s-pending{background:var(--blue-dim);color:var(--blue);}
-.s-sent{background:var(--green-dim);color:var(--green);}
+.s-pending{background:var(--surface2);color:var(--text2);}
+.s-sent{background:var(--surface2);color:var(--text2);}
 .s-failed{background:var(--orange-dim);color:var(--orange);}
-.s-reviewing{background:var(--yellow-dim);color:var(--yellow);}
+.s-reviewing{background:var(--surface2);color:var(--text2);}
 
-.mode-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;transition:var(--transition);}
-.mode-autopilot{background:var(--purple-dim);color:var(--purple);}
-.mode-copilot{background:var(--blue-dim);color:var(--blue);}
+/* ① Mode badges: informational only — muted border style */
+.mode-badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid var(--border);transition:var(--transition);}
+.mode-autopilot{background:var(--surface);color:var(--text2);}
+.mode-copilot{background:var(--surface);color:var(--text2);}
 
+/* ⑥ Magic button: CTA vs status distinction */
 .magic-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:var(--radius-sm);border:none;font-size:12px;font-weight:700;cursor:pointer;transition:var(--transition);font-family:inherit;min-height:34px;}
 .magic-btn-ready{background:var(--primary);color:var(--primary-text);box-shadow:var(--shadow-sm);}
 .magic-btn-ready:hover{filter:brightness(1.08);box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.magic-btn-sent{background:var(--green-dim);color:var(--green);cursor:default;}
-.magic-btn-low{background:var(--surface2);color:var(--text3);cursor:not-allowed;border:1px solid var(--border);}
+/* Sent = status indicator, not a CTA — badge-style, no hover */
+.magic-btn-sent{background:none;color:var(--green);cursor:default;min-height:auto;padding:4px 0;font-size:12px;font-weight:600;box-shadow:none;pointer-events:none;}
+.magic-btn-low{background:var(--surface2);color:var(--text3);cursor:not-allowed;border:1px solid var(--border);opacity:0.7;}
 .reasoning-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);font-size:11px;font-weight:500;padding:5px 9px;cursor:pointer;transition:var(--transition);font-family:inherit;min-height:30px;}
 .reasoning-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim);}
 
@@ -328,6 +335,11 @@ tr:hover td{background:var(--surface2);}
 [dir="rtl"] .ud-item.open .ud-arrow{transform:scaleX(-1) rotate(90deg);}
 [dir="rtl"] .ud-item-icon{margin-right:0;margin-left:4px;}
 [dir="rtl"] .modal-header{flex-direction:row-reverse;}
+/* ③ RTL fix: consistent text alignment in table cells */
+[dir="rtl"] td{text-align:right;}
+[dir="rtl"] .col-title{text-align:right;}
+[dir="rtl"] .score-wrap{flex-direction:row-reverse;}
+[dir="rtl"] .source-badge{flex-direction:row-reverse;}
 
 /* ═══════════════════════════════════════════════════════
    RESPONSIVE — Mobile (<768px)
