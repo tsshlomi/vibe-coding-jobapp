@@ -432,6 +432,23 @@ tr:hover td{background:var(--surface2);}
 .gap-wrap.open .gap-popover{display:block;}
 /* Clickable rows */
 tbody tr{cursor:pointer;}
+/* ═══════ GROUP BY ═══════ */
+.groupby-wrap{position:relative;}
+.groupby-btn{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:var(--transition);white-space:nowrap;font-family:inherit;}
+.groupby-btn:hover{border-color:var(--primary);color:var(--primary);}
+.groupby-btn.active{background:var(--primary-dim);border-color:var(--primary);color:var(--primary);font-weight:600;}
+.groupby-menu{display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-md);z-index:50;min-width:160px;overflow:hidden;}
+.groupby-menu.open{display:block;}
+.groupby-opt{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--text2);transition:var(--transition);display:flex;align-items:center;gap:8px;}
+.groupby-opt:hover{background:var(--surface2);color:var(--text);}
+.groupby-opt.on{color:var(--primary);font-weight:600;}
+.groupby-opt.on::after{content:'✓';margin-left:auto;font-size:12px;}
+/* Group header rows */
+.group-header td{background:var(--surface2);font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.6px;padding:7px 14px;border-bottom:1px solid var(--border);border-top:2px solid var(--border);cursor:pointer;user-select:none;transition:background 0.15s;}
+.group-header:hover td{background:var(--surface3);}
+.group-arrow{display:inline-block;transition:transform 0.15s;font-size:9px;margin-right:5px;}
+.group-collapsed .group-arrow{transform:rotate(-90deg);}
+.group-count{background:var(--surface3);color:var(--text2);font-size:10px;padding:1px 7px;border-radius:10px;margin-left:6px;font-weight:600;}
 /* ═══════ BULK SELECTION ═══════ */
 .col-check{width:38px;text-align:center;padding:10px 6px !important;cursor:default;}
 .col-check input[type="checkbox"]{width:15px;height:15px;cursor:pointer;accent-color:var(--primary);vertical-align:middle;}
@@ -574,6 +591,16 @@ tr.row-selected:hover td{filter:brightness(0.97);}
           <div class="filter-chip" data-i18n="filter_gov" data-filter="gov" onclick="filterChip(this)">Gov</div>
           <div class="filter-chip" data-i18n="filter_ge80" data-filter="ge80" onclick="filterChip(this)">≥80%</div>
           <input class="search-input" id="search-input" type="text" placeholder="🔍  Search..." data-i18n-placeholder="placeholder_search" oninput="filterTable()">
+        </div>
+        <div class="groupby-wrap">
+          <button class="groupby-btn" id="groupby-btn" onclick="toggleGroupByMenu()">⊞ Group By ▾</button>
+          <div class="groupby-menu" id="groupby-menu">
+            <div class="groupby-opt on" data-gby="" onclick="applyGroupBy(this,'')">None</div>
+            <div class="groupby-opt" data-gby="status" onclick="applyGroupBy(this,'status')">📋 Status</div>
+            <div class="groupby-opt" data-gby="source" onclick="applyGroupBy(this,'source')">🔗 Source</div>
+            <div class="groupby-opt" data-gby="autonomy" onclick="applyGroupBy(this,'autonomy')">🤖 Autonomy</div>
+            <div class="groupby-opt" data-gby="match" onclick="applyGroupBy(this,'match')">📊 Match Range</div>
+          </div>
         </div>
         <span class="filter-count" id="filter-count">Showing <strong>7</strong> of 47</span>
         <div class="stats-row">
@@ -1282,6 +1309,127 @@ const JOBS = {
 };
 
 // ══════════════════════════════════════════════════════
+// GROUP BY
+// ══════════════════════════════════════════════════════
+let activeGroupBy = '';
+let originalRowOrder = null; // cached on first use
+
+function getOriginalRows() {
+  if (!originalRowOrder) {
+    originalRowOrder = [...document.querySelectorAll('tbody tr[data-job]')];
+  }
+  return originalRowOrder;
+}
+
+function groupRowKey(row, field) {
+  switch (field) {
+    case 'status': {
+      const b = row.querySelector('.status-badge');
+      return b ? b.textContent.trim().replace(/^[✓⚠]\s*/, '') : 'Unknown';
+    }
+    case 'source': {
+      const b = row.querySelector('.source-badge');
+      if (!b) return 'Other';
+      if (b.classList.contains('src-linkedin')) return '💼 LinkedIn';
+      if (b.classList.contains('src-gov'))      return '🏛 Government';
+      if (b.classList.contains('src-indeed'))   return '🔎 Indeed';
+      if (b.classList.contains('src-telegram')) return '✈️ Telegram';
+      if (b.classList.contains('src-facebook')) return '👥 Facebook';
+      return 'Other';
+    }
+    case 'autonomy': {
+      const m = row.querySelector('.mode-badge');
+      if (m) return m.textContent.trim();
+      const manual = row.querySelector('[data-i18n="mode_manual"]');
+      return manual ? 'Manual' : 'Unknown';
+    }
+    case 'match': {
+      const score = parseInt(row.querySelector('.score-num')?.textContent) || 0;
+      if (score >= 90) return '🟢 High Match  (≥ 90%)';
+      if (score >= 80) return '🟡 Good Match  (80–89%)';
+      if (score >= 70) return '🟠 Medium Match  (70–79%)';
+      return '🔴 Low Match  (< 70%)';
+    }
+    default: return '';
+  }
+}
+
+const MATCH_ORDER = ['🟢 High Match  (≥ 90%)', '🟡 Good Match  (80–89%)', '🟠 Medium Match  (70–79%)', '🔴 Low Match  (< 70%)'];
+
+function rebuildGroups(field) {
+  const tbody = document.querySelector('tbody');
+  // Remove existing group headers
+  tbody.querySelectorAll('.group-header').forEach(r => r.remove());
+  if (!field) {
+    // Restore original order
+    getOriginalRows().forEach(r => tbody.appendChild(r));
+    return;
+  }
+  // Build group map preserving row references
+  const groups = new Map();
+  getOriginalRows().forEach(row => {
+    const key = groupRowKey(row, field);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  });
+  // Sort group keys
+  let keys = [...groups.keys()];
+  if (field === 'match') keys = MATCH_ORDER.filter(k => groups.has(k));
+  else keys.sort();
+  // Insert header + rows for each group
+  keys.forEach(key => {
+    const rows = groups.get(key);
+    const header = document.createElement('tr');
+    header.className = 'group-header';
+    header.dataset.group = key;
+    header.innerHTML = `<td colspan="10" onclick="toggleGroup(this.parentElement)">
+      <span class="group-arrow">▼</span>${key}<span class="group-count">${rows.length}</span>
+    </td>`;
+    tbody.appendChild(header);
+    rows.forEach(r => tbody.appendChild(r));
+  });
+}
+
+function toggleGroup(headerRow) {
+  headerRow.classList.toggle('group-collapsed');
+  let row = headerRow.nextElementSibling;
+  const collapsed = headerRow.classList.contains('group-collapsed');
+  while (row && !row.classList.contains('group-header')) {
+    // Only hide visible rows (don't un-hide filter-hidden rows)
+    if (!row._filterHidden) row.style.display = collapsed ? 'none' : '';
+    row = row.nextElementSibling;
+  }
+}
+
+function toggleGroupByMenu() {
+  const menu = document.getElementById('groupby-menu');
+  menu.classList.toggle('open');
+  if (menu.classList.contains('open')) {
+    setTimeout(() => document.addEventListener('click', function h(e) {
+      if (!e.target.closest('.groupby-wrap')) {
+        menu.classList.remove('open');
+        document.removeEventListener('click', h);
+      }
+    }), 0);
+  }
+}
+
+function applyGroupBy(optEl, field) {
+  activeGroupBy = field;
+  document.querySelectorAll('.groupby-opt').forEach(o => o.classList.remove('on'));
+  optEl.classList.add('on');
+  document.getElementById('groupby-menu')?.classList.remove('open');
+  const btn = document.getElementById('groupby-btn');
+  const labels = {status:'Status', source:'Source', autonomy:'Autonomy', match:'Match Range'};
+  if (btn) {
+    btn.textContent = field ? `⊞ ${labels[field]} ▾` : '⊞ Group By ▾';
+    btn.classList.toggle('active', !!field);
+  }
+  rebuildGroups(field);
+  filterTable(); // reapply filters to newly reordered rows
+}
+
+// ══════════════════════════════════════════════════════
 // BULK SELECTION
 // ══════════════════════════════════════════════════════
 function getCheckedRows() {
@@ -1386,9 +1534,33 @@ function filterTable() {
     if (filter === 'gov'      && !srcCls.includes('src-gov'))        show = false;
     if (filter === 'ge80'     && score < 80)                         show = false;
 
-    row.style.display = show ? '' : 'none';
-    if (!show && row.querySelector('.row-check')) row.querySelector('.row-check').checked = false;
+    row._filterHidden = !show;
+    // Respect collapsed group — don't un-hide rows inside a collapsed group
+    const prevHeader = [...document.querySelectorAll('.group-header')].reverse()
+      .find(h => h.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const inCollapsed = prevHeader?.classList.contains('group-collapsed');
+    row.style.display = (show && !inCollapsed) ? '' : 'none';
+    if (!show) { const ck = row.querySelector('.row-check'); if (ck) ck.checked = false; }
     if (show) visible++;
+  });
+
+  // Hide group headers where all their rows are filter-hidden
+  document.querySelectorAll('.group-header').forEach(header => {
+    let row = header.nextElementSibling;
+    let hasVisible = false;
+    while (row && !row.classList.contains('group-header')) {
+      if (!row._filterHidden) hasVisible = true;
+      row = row.nextElementSibling;
+    }
+    header.style.display = hasVisible ? '' : 'none';
+    // Update count badge to reflect filtered visible rows
+    const count = header.querySelector('.group-count');
+    if (count) {
+      let n = 0;
+      let r = header.nextElementSibling;
+      while (r && !r.classList.contains('group-header')) { if (!r._filterHidden) n++; r = r.nextElementSibling; }
+      count.textContent = n;
+    }
   });
 
   const el = document.getElementById('filter-count');
@@ -1571,6 +1743,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const row = e.target.closest('tr[data-job]');
     if (row) openJobCard(row.dataset.job);
   });
+  // Cache original row order before any grouping
+  getOriginalRows();
   // Initialize filter count
   filterTable();
 });
