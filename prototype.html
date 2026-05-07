@@ -389,10 +389,15 @@ tr.kb-focus td:first-child{border-left:3px solid var(--primary);}
   [dir="rtl"] .sidebar.open{right:0;left:auto;}
   .table-wrap{display:none;}
   .job-cards{display:flex;}
-  .toolbar{overflow-x:auto;flex-wrap:nowrap;gap:6px;padding:8px 14px;}
+  .toolbar{overflow-x:auto;flex-wrap:nowrap;gap:6px;padding:8px 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none;mask-image:linear-gradient(to right,#000 85%,transparent 100%);}
+  .toolbar::-webkit-scrollbar{display:none;}
   .toolbar .stats-row{display:none;}
   .toolbar .filter-count{display:none;}
-  .search-input{width:130px;min-width:120px;}
+  .toolbar .groupby-wrap{flex-shrink:0;}
+  .search-input{width:120px;min-width:100px;flex-shrink:0;}
+  /* Mobile filter count row */
+  .mobile-filter-count{display:flex;align-items:center;padding:4px 14px 6px;font-size:12px;color:var(--text2);}
+  .mobile-filter-count strong{color:var(--text);font-weight:700;margin:0 2px;}
   .page-header{padding:12px 14px;flex-wrap:wrap;gap:8px;}
   .page-title{font-size:15px;}
   .page-actions{margin-left:0;width:100%;}
@@ -509,16 +514,29 @@ tr.row-selected:hover td{filter:brightness(0.97);}
 @media(max-width:767px){
   .jc-facts{grid-template-columns:repeat(2,1fr);}
   .jc-title{font-size:17px;}
+  /* Bulk bar — compact on mobile */
+  .bulk-bar{padding:8px 12px;gap:6px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .bulk-count{font-size:12px;min-width:70px;}
+  .bulk-actions{flex-wrap:nowrap;gap:5px;}
+  .bulk-btn{padding:5px 9px;font-size:11px;white-space:nowrap;}
+  .bulk-btn-status span.chg-label{display:none;} /* hide "Change" text, keep icon */
+  /* Task dropdown — open upward on mobile to avoid off-screen */
+  .task-dropdown{top:auto;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);}
+  /* Shortcuts panel — hidden on mobile */
+  .shortcuts-panel{display:none !important;}
 }
 /* ═══════ MOBILE CARD BULK ═══════ */
-.job-card-check{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-.job-card-check input[type="checkbox"]{width:15px;height:15px;cursor:pointer;accent-color:var(--primary);}
+/* Checkbox now lives inside .job-card-header — no separate row */
+.job-card-check{display:none;} /* hidden; checkbox is in header */
+.job-card-header-check{width:18px;height:18px;cursor:pointer;accent-color:var(--primary);flex-shrink:0;margin-top:2px;}
 .job-card.card-selected{border-color:var(--primary);background:var(--primary-dim);}
 /* ═══════ MOBILE GROUP HEADER ═══════ */
 .mobile-group-header{padding:6px 12px;font-size:11px;font-weight:700;color:var(--text2);background:var(--surface2);border-radius:var(--radius-sm);margin-top:4px;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none;border:1px solid var(--border);}
 .mobile-group-header:first-child{margin-top:0;}
 .mobile-group-header .group-arrow{display:inline-block;transition:transform 0.2s;font-size:9px;}
 .mobile-group-header.group-collapsed .group-arrow{transform:rotate(-90deg);}
+/* Mobile filter count — hidden on desktop */
+.mobile-filter-count{display:none;}
 /* ═══════ BULK APPLY PROGRESS ═══════ */
 .bulk-apply-cell{font-size:11px;color:var(--text2);}
 .bulk-apply-cell.bap-running{color:var(--primary);}
@@ -671,6 +689,9 @@ tr.row-selected:hover td{filter:brightness(0.97);}
         </div>
       </div>
 
+      <!-- MOBILE FILTER COUNT (shown only on mobile, below toolbar) -->
+      <div class="mobile-filter-count" id="mobile-filter-count">Showing <strong id="mobile-filter-num">7</strong> of 47</div>
+
       <!-- BULK ACTION BAR (shown when rows are selected) -->
       <div class="bulk-bar" id="bulk-bar">
         <span class="bulk-count" id="bulk-count">0 selected</span>
@@ -678,7 +699,7 @@ tr.row-selected:hover td{filter:brightness(0.97);}
           <button class="bulk-btn bulk-btn-apply" onclick="bulkAction('apply')">✨ Apply All</button>
           <button class="bulk-btn bulk-btn-archive" onclick="bulkAction('archive')">📁 Archive</button>
           <div class="bulk-status-wrap">
-            <button class="bulk-btn bulk-btn-status" onclick="toggleBulkStatusMenu(this)">🔄 Change Status ▾</button>
+            <button class="bulk-btn bulk-btn-status" onclick="toggleBulkStatusMenu(this)">🔄 <span class="chg-label">Change </span>Status ▾</button>
             <div class="bulk-status-menu" id="bulk-status-menu">
               <div class="bulk-status-opt" onclick="bulkSetStatus('In Review')">In Review</div>
               <div class="bulk-status-opt" onclick="bulkSetStatus('Pending')">Pending</div>
@@ -797,12 +818,9 @@ tr.row-selected:hover td{filter:brightness(0.97);}
       <!-- MOBILE CARDS -->
       <div class="job-cards" id="job-cards">
         <div class="job-card" data-job="mekorot" data-status="In Review" data-source="src-gov" data-match="95" data-autonomy="Autopilot">
-          <div class="job-card-check">
-            <input type="checkbox" class="card-check" onchange="updateBulkBar()">
-            <span style="font-size:11px;color:var(--text3);font-weight:500">Select</span>
-          </div>
           <div class="job-card-header">
-            <div><div class="job-card-title">Senior PMO Manager — Infrastructure</div><div class="job-card-company">Mekorot Water Authority</div></div>
+            <input type="checkbox" class="card-check job-card-header-check" onchange="updateBulkBar()" onclick="event.stopPropagation()">
+            <div style="flex:1;min-width:0"><div class="job-card-title">Senior PMO Manager — Infrastructure</div><div class="job-card-company">Mekorot Water Authority</div></div>
             <span class="score-num score-high" style="font-size:16px;flex-shrink:0">95%</span>
           </div>
           <div class="job-card-meta">
@@ -818,12 +836,9 @@ tr.row-selected:hover td{filter:brightness(0.97);}
           </div>
         </div>
         <div class="job-card" data-job="hot" data-status="Sent" data-source="src-linkedin" data-match="88" data-autonomy="Co-Pilot">
-          <div class="job-card-check">
-            <input type="checkbox" class="card-check" onchange="updateBulkBar()">
-            <span style="font-size:11px;color:var(--text3);font-weight:500">Select</span>
-          </div>
           <div class="job-card-header">
-            <div><div class="job-card-title">Project Manager — Digital Transformation</div><div class="job-card-company">HOT Mobile</div></div>
+            <input type="checkbox" class="card-check job-card-header-check" onchange="updateBulkBar()" onclick="event.stopPropagation()">
+            <div style="flex:1;min-width:0"><div class="job-card-title">Project Manager — Digital Transformation</div><div class="job-card-company">HOT Mobile</div></div>
             <span class="score-num score-high" style="font-size:16px;flex-shrink:0">88%</span>
           </div>
           <div class="job-card-meta">
@@ -838,12 +853,9 @@ tr.row-selected:hover td{filter:brightness(0.97);}
           </div>
         </div>
         <div class="job-card" data-job="hapoalim" data-status="Pending" data-source="src-linkedin" data-match="82" data-autonomy="Co-Pilot">
-          <div class="job-card-check">
-            <input type="checkbox" class="card-check" onchange="updateBulkBar()">
-            <span style="font-size:11px;color:var(--text3);font-weight:500">Select</span>
-          </div>
           <div class="job-card-header">
-            <div><div class="job-card-title">Agile Program Manager — Fintech</div><div class="job-card-company">Bank Hapoalim Digital</div></div>
+            <input type="checkbox" class="card-check job-card-header-check" onchange="updateBulkBar()" onclick="event.stopPropagation()">
+            <div style="flex:1;min-width:0"><div class="job-card-title">Agile Program Manager — Fintech</div><div class="job-card-company">Bank Hapoalim Digital</div></div>
             <span class="score-num score-mid" style="font-size:16px;flex-shrink:0">82%</span>
           </div>
           <div class="job-card-meta">
@@ -858,12 +870,9 @@ tr.row-selected:hover td{filter:brightness(0.97);}
           </div>
         </div>
         <div class="job-card" data-job="iec" data-status="Auto" data-source="src-gov" data-match="94" data-autonomy="Autopilot">
-          <div class="job-card-check">
-            <input type="checkbox" class="card-check" onchange="updateBulkBar()">
-            <span style="font-size:11px;color:var(--text3);font-weight:500">Select</span>
-          </div>
           <div class="job-card-header">
-            <div><div class="job-card-title">Infrastructure Project Lead — Energy</div><div class="job-card-company">Israel Electric Corporation</div></div>
+            <input type="checkbox" class="card-check job-card-header-check" onchange="updateBulkBar()" onclick="event.stopPropagation()">
+            <div style="flex:1;min-width:0"><div class="job-card-title">Infrastructure Project Lead — Energy</div><div class="job-card-company">Israel Electric Corporation</div></div>
             <span class="score-num score-high" style="font-size:16px;flex-shrink:0">94%</span>
           </div>
           <div class="job-card-meta">
@@ -878,12 +887,9 @@ tr.row-selected:hover td{filter:brightness(0.97);}
           </div>
         </div>
         <div class="job-card" data-job="shippers" data-status="Error" data-source="src-facebook" data-match="79" data-autonomy="Manual">
-          <div class="job-card-check">
-            <input type="checkbox" class="card-check" onchange="updateBulkBar()">
-            <span style="font-size:11px;color:var(--text3);font-weight:500">Select</span>
-          </div>
           <div class="job-card-header">
-            <div><div class="job-card-title">VP Operations — Logistics</div><div class="job-card-company">Shippers Group</div></div>
+            <input type="checkbox" class="card-check job-card-header-check" onchange="updateBulkBar()" onclick="event.stopPropagation()">
+            <div style="flex:1;min-width:0"><div class="job-card-title">VP Operations — Logistics</div><div class="job-card-company">Shippers Group</div></div>
             <span class="score-num score-mid" style="font-size:16px;flex-shrink:0">79%</span>
           </div>
           <div class="job-card-meta">
@@ -1892,6 +1898,9 @@ function filterTable() {
 
   const el = document.getElementById('filter-count');
   if (el) el.innerHTML = `Showing <strong>${visible}</strong> of 47`;
+  // Sync mobile filter count
+  const mobileNum = document.getElementById('mobile-filter-num');
+  if (mobileNum) mobileNum.textContent = visible;
   updateBulkBar();
 }
 
